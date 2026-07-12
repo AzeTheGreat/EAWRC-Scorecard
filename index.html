@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EAWRC Scorecard</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="container">
+    <section id="profile" class="section">
+      <div class="pill-row">
+        <div class="profile-input">
+          <input type="text" id="profile-name" placeholder="Enter name...">
+        </div>
+        <div class="stat-pill">
+          <span class="pill-label">SP</span>
+          <span class="pill-value"></span>
+        </div>
+        <div class="stat-pill">
+          <span class="pill-label">TP</span>
+          <span class="pill-value"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="totals" class="section">
+      <div class="pill-row">
+        <div class="stat-pill">
+          <span class="pill-label">Percentile</span>
+          <span class="pill-value"></span>
+        </div>
+        <div class="stat-pill">
+          <span class="pill-label">Delta</span>
+          <span class="pill-value"></span>
+        </div>
+        <div class="stat-pill">
+          <span class="pill-label">Placement</span>
+          <span class="pill-value"></span>
+        </div>
+        <div class="stat-pill">
+          <span class="pill-label">Medals</span>
+          <span class="pill-value"></span>
+        </div>
+      </div>
+    </section>
+
+    <section id="table" class="section section--table">
+      <div class="table-wrapper">
+        <table id="score-table"></table>
+      </div>
+    </section>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
