@@ -1,72 +1,77 @@
 (function () {
   "use strict";
 
-  const table = document.getElementById("score-table");
-  const classes = window.CLASS_LUT;
-  const locations = window.LOCATION_LUT;
+  buildTable({
+    xDict: ClassIdsByDrivetrain,
+    xGroupFunc: (drivetrain) => drivetrain,
+    xFunc: (classId) => ClassNameByClassId[classId],
+    yDict: LocIdsBySurface,
+    yGroupFunc: (surface) => surface,
+    yFunc: (locId) => LocNameByLocID[locId],
+    dataGroupFunc: (drivetrain, surface) => getTotals(null, null).percentile,
+    dataFunc: (classId, locId) => getTotals(classId, locId).percentile,
+  });
 
-  const groups = ["RWD", "4WD", "FWD"].map((dt) => ({
-    label: dt,
-    classes: classes.filter((c) => c.drivetrain === dt),
-  }));
+  function getTotals(classId, locId) {
+    const hasValue = Math.random() < 0.33;
+    return { percentile: hasValue ? Math.floor(Math.random() * 101) : "" };
+  }
 
-  const surfaces = [
-    { name: "Loose", locs: locations.filter((l) => l.surfaceType === "Loose") },
-    { name: "Asphalt", locs: locations.filter((l) => l.surfaceType === "Asphalt") },
-  ];
+  function buildTable(config) {
+    const table = document.getElementById("score-table");
+    const xKeys = Object.keys(config.xDict);
+    const yKeys = Object.keys(config.yDict);
 
-  const allClasses = groups.flatMap((g) => g.classes);
+    const getHeaderRow = () => getRow([
+      { text: null, rowspan: 2 },
+      ...xKeys.map(k => ({ text: config.xGroupFunc(k), colSpan: config.xDict[k].length })),
+    ]);
 
-  function createElem(tag, text) {
+    const getSubHeaderRow = () => getRow(
+      xKeys.flatMap(k => config.xDict[k].map(v => ({ text: config.xFunc(v) })))
+    );
+
+    const getGroupDataRow = (yKey) => getRow([
+      { text: config.yGroupFunc(yKey) },
+      ...xKeys.map(k => ({ text: config.dataGroupFunc(k, yKey), tag: "td", colSpan: config.xDict[k].length })),
+    ]);
+
+    const getDataRow = (yKey, yVal) => getRow([
+      { text: config.yFunc(yVal) },
+      ...xKeys.flatMap(k => config.xDict[k].map(v => ({ text: config.dataFunc(v, yVal), tag: "td" }))),
+    ]);
+
+    const thead = getElem("thead");
+    thead.appendChild(getHeaderRow());
+    thead.appendChild(getSubHeaderRow());
+    table.appendChild(thead);
+
+    const tbody = getElem("tbody");
+    yKeys.forEach(yKey => {
+      tbody.appendChild(getGroupDataRow(yKey));
+      config.yDict[yKey].forEach(yVal => {
+        tbody.appendChild(getDataRow(yKey, yVal));
+      });
+    });
+
+    table.appendChild(tbody);
+  };
+
+  function getRow(cells) {
+    const row = getElem("tr");
+    cells.forEach(({ text, tag = "th", colSpan, rowspan }) => {
+      const cell = getElem(tag, text);
+      if (colSpan) cell.colSpan = colSpan;
+      if (rowspan) cell.rowSpan = rowspan;
+      row.appendChild(cell);
+    });
+    return row;
+  };
+
+  function getElem(tag, text) {
     const elem = document.createElement(tag);
     if (text != null) elem.textContent = text;
     return elem;
-  }
+  };
 
-  function randomValue() {
-    return Math.random() < 0.33 ? Math.floor(Math.random() * 101) : "";
-  }
-
-  // thead
-  const thead = createElem("thead");
-
-  const drivetrainRow = createElem("tr");
-  const corner = createElem("th");
-  corner.rowSpan = 2;
-  drivetrainRow.appendChild(corner);
-  groups.forEach((g) => {
-    const th = createElem("th", g.label);
-    th.colSpan = g.classes.length;
-    drivetrainRow.appendChild(th);
-  });
-  thead.appendChild(drivetrainRow);
-
-  const classRow = createElem("tr");
-  allClasses.forEach((c) => classRow.appendChild(createElem("th", c.shortName)));
-  thead.appendChild(classRow);
-
-  table.appendChild(thead);
-
-  // tbody
-  const tbody = createElem("tbody");
-
-  surfaces.forEach((surface) => {
-    const surfaceRow = createElem("tr");
-    surfaceRow.appendChild(createElem("th", surface.name));
-    groups.forEach((g) => {
-      const td = createElem("td", randomValue());
-      td.colSpan = g.classes.length;
-      surfaceRow.appendChild(td);
-    });
-    tbody.appendChild(surfaceRow);
-
-    surface.locs.forEach((loc) => {
-      const row = createElem("tr");
-      row.appendChild(createElem("th", loc.shortName));
-      allClasses.forEach(() => row.appendChild(createElem("td", randomValue())));
-      tbody.appendChild(row);
-    });
-  });
-
-  table.appendChild(tbody);
 })();
