@@ -5,7 +5,6 @@
 }
 
 html, body {
-  height: 100%;
   font-family: system-ui, -apple-system, sans-serif;
   background: #f5f5f5;
   color: #333;
@@ -17,8 +16,6 @@ html, body {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  width: 100%;
   gap: 20px;
 }
 
@@ -27,10 +24,6 @@ html, body {
   border: 1px solid #ddd;
   border-radius: 8px;
   padding: 20px;
-}
-
-.section--table {
-  flex: 1;
 }
 
 .pill-row {
@@ -86,20 +79,12 @@ html, body {
   overflow-x: auto;
   border: 1px solid #ddd;
   border-radius: 4px;
-  height: 100%;
 }
 
-#score-table {
-  border-collapse: collapse;
-  width: 100%;
-  height: 100%;
+.score-table-grid {
+  display: grid;
 }
 
-#score-table th,
-#score-table td {
-  border: 1px solid #ccc;
-  padding: 4px 6px;
-  text-align: center;
-  font-size: 0.8rem;
-  min-width: 40px;
+.chunk-sub-grid {
+  display: grid;
 }

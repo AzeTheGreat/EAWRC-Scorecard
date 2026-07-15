@@ -18,60 +18,56 @@
   }
 
   function buildTable(config) {
-    const table = document.getElementById("score-table");
-    const xKeys = Object.keys(config.xDict);
-    const yKeys = Object.keys(config.yDict);
+    const grid = getElem("div", "score-table-grid");
 
-    const getHeaderRow = () => getRow([
-      { text: null, rowspan: 2 },
-      ...xKeys.map(k => ({ text: config.xGroupFunc(k), colSpan: config.xDict[k].length })),
-    ]);
+    Object.entries({ "": null, ...config.xDict }).forEach(([xKey, xVal], xi) => {
+      Object.entries({ "": null, ...config.yDict }).forEach(([yKey, yVal], yi) => {
+        let chunk;
+        if (xKey && yKey)
+          chunk = getChunk(config.dataGroupFunc(xKey, yKey), yVal.map(y => xVal.map(x => config.dataFunc(x, y))));
+        else if(xKey)
+          chunk = getChunk(config.xGroupFunc(xKey), [xVal.map(config.xFunc)], true);
+        else if(yKey)
+          chunk = getChunk(config.yGroupFunc(yKey), yVal.map(y => [config.yFunc(y)]), true);
+        else
+          chunk = getChunk(null, null);
 
-    const getSubHeaderRow = () => getRow(
-      xKeys.flatMap(k => config.xDict[k].map(v => ({ text: config.xFunc(v) })))
-    );
+        chunk.style.gridColumn = xi + 1;
+        chunk.style.gridRow = yi + 1;
+        grid.appendChild(chunk);
+      })
+    })
 
-    const getGroupDataRow = (yKey) => getRow([
-      { text: config.yGroupFunc(yKey) },
-      ...xKeys.map(k => ({ text: config.dataGroupFunc(k, yKey), tag: "td", colSpan: config.xDict[k].length })),
-    ]);
+    const wrapper = document.querySelector(".table-wrapper");
+    wrapper.appendChild(grid);
 
-    const getDataRow = (yKey, yVal) => getRow([
-      { text: config.yFunc(yVal) },
-      ...xKeys.flatMap(k => config.xDict[k].map(v => ({ text: config.dataFunc(v, yVal), tag: "td" }))),
-    ]);
+    function getChunk(headerVal, dataVals, gridCol, gridRow, isHeader = false) {
+      const chunk = getElem("div", "chunk");
+      if(headerVal === null || dataVals === null)
+        return chunk;
 
-    const thead = getElem("thead");
-    thead.appendChild(getHeaderRow());
-    thead.appendChild(getSubHeaderRow());
-    table.appendChild(thead);
+      const header = getElem("div", "chunk-header", headerVal);
+      chunk.appendChild(header);
 
-    const tbody = getElem("tbody");
-    yKeys.forEach(yKey => {
-      tbody.appendChild(getGroupDataRow(yKey));
-      config.yDict[yKey].forEach(yVal => {
-        tbody.appendChild(getDataRow(yKey, yVal));
+      const grid = getElem("div", "chunk-sub-grid");
+      dataVals.forEach((row, ri) => {
+        row.forEach((d, ci) => {
+          const cell = getElem("div", null, d);
+          cell.style.gridColumn = ci + 1;
+          cell.style.gridRow = ri + 1;
+          grid.appendChild(cell);
+        });
       });
-    });
+      chunk.appendChild(grid);
 
-    table.appendChild(tbody);
-  };
+      return chunk;
+    }
+  }
 
-  function getRow(cells) {
-    const row = getElem("tr");
-    cells.forEach(({ text, tag = "th", colSpan, rowspan }) => {
-      const cell = getElem(tag, text);
-      if (colSpan) cell.colSpan = colSpan;
-      if (rowspan) cell.rowSpan = rowspan;
-      row.appendChild(cell);
-    });
-    return row;
-  };
-
-  function getElem(tag, text) {
+  function getElem(tag, className, text) {
     const elem = document.createElement(tag);
+    if (className) elem.className = className;
     if (text != null) elem.textContent = text;
     return elem;
-  };
-
+  }
 })();
