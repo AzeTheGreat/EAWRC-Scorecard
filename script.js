@@ -24,11 +24,11 @@
       Object.entries({ "": null, ...config.yDict }).forEach(([yKey, yVal], yi) => {
         let chunk;
         if (xKey && yKey)
-          chunk = getChunk(config.dataGroupFunc(xKey, yKey), yVal.map(y => xVal.map(x => config.dataFunc(x, y))));
+          chunk = getChunk(config.dataGroupFunc(xKey, yKey), yVal.map(y => xVal.map(x => config.dataFunc(x, y))), "data");
         else if(xKey)
-          chunk = getChunk(config.xGroupFunc(xKey), [xVal.map(config.xFunc)], true);
+          chunk = getChunk(config.xGroupFunc(xKey), [xVal.map(config.xFunc)], "xhead");
         else if(yKey)
-          chunk = getChunk(config.yGroupFunc(yKey), yVal.map(y => [config.yFunc(y)]), true);
+          chunk = getChunk(config.yGroupFunc(yKey), yVal.map(y => [config.yFunc(y)]), "yhead");
         else
           chunk = getChunk(null, null);
 
@@ -41,25 +41,32 @@
     const wrapper = document.querySelector(".table-wrapper");
     wrapper.appendChild(grid);
 
-    function getChunk(headerVal, dataVals, gridCol, gridRow, isHeader = false) {
-      const chunk = getElem("div", "chunk");
-      if(headerVal === null || dataVals === null)
+    function getChunk(groupVal, cellVals, classStr) {
+      const chunk = getElem("div", "chunk " + classStr);
+      
+      if(groupVal === null || cellVals === null)
         return chunk;
 
-      const header = getElem("div", "chunk-header", headerVal);
-      chunk.appendChild(header);
+      const table = getElem("table");
+      const thead = getElem("thead");
+      const headerRow = getElem("tr");
+      const th = getElem("th", null, groupVal);
+      th.colSpan = cellVals[0].length;
+      headerRow.appendChild(th);
+      thead.appendChild(headerRow);
+      table.appendChild(thead);
 
-      const grid = getElem("div", "chunk-sub-grid");
-      dataVals.forEach((row, ri) => {
-        row.forEach((d, ci) => {
-          const cell = getElem("div", null, d);
-          cell.style.gridColumn = ci + 1;
-          cell.style.gridRow = ri + 1;
-          grid.appendChild(cell);
+      const tbody = getElem("tbody");
+      cellVals.forEach((row) => {
+        const tr = getElem("tr");
+        row.forEach((c) => {
+          tr.appendChild(getElem("td", null, c));
         });
+        tbody.appendChild(tr);
       });
-      chunk.appendChild(grid);
+      table.appendChild(tbody);
 
+      chunk.appendChild(table);
       return chunk;
     }
   }
