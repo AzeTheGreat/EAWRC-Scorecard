@@ -1,80 +1,94 @@
-(function () {
-  "use strict";
+"use strict";
 
-  buildTable({
-    xDict: ClassIdsByDrivetrain,
-    xGroupFunc: (drivetrain) => drivetrain,
-    xFunc: (classId) => ClassNameByClassId[classId],
-    yDict: LocIdsBySurface,
-    yGroupFunc: (surface) => surface,
-    yFunc: (locId) => LocNameByLocID[locId],
-    dataGroupFunc: (drivetrain, surface) => getTotals(null, null).percentile,
-    dataFunc: (classId, locId) => getTotals(classId, locId).percentile,
-  });
+function getElem(tag, className, text) {
+  const elem = document.createElement(tag);
+  if (className) elem.className = className;
+  if (text != null) elem.textContent = text;
+  return elem;
+}
 
-  function getTotals(classId, locId) {
-    const hasValue = Math.random() < 0.33;
-    return { percentile: hasValue ? Math.floor(Math.random() * 101) : "" };
-  }
+function getTotals(classId, drivetrain, locId, surface) {
+  const entries = window.apiData?.entries;
+  const config = window.SCORECARD_CONFIG;
+  if (!entries) return { percentile: "" };
 
-  function buildTable(config) {
-    const grid = getElem("div", "score-table-grid");
+  const classIds = [];
+  const locIds = [];
 
-    Object.entries({ "": null, ...config.xDict }).forEach(([xKey, xVal], xi) => {
-      Object.entries({ "": null, ...config.yDict }).forEach(([yKey, yVal], yi) => {
-        let chunk;
-        if (xKey && yKey)
-          chunk = getChunk(config.dataGroupFunc(xKey, yKey), yVal.map(y => xVal.map(x => config.dataFunc(x, y))), "data");
-        else if(xKey)
-          chunk = getChunk(config.xGroupFunc(xKey), [xVal.map(config.xFunc)], "xhead");
-        else if(yKey)
-          chunk = getChunk(config.yGroupFunc(yKey), yVal.map(y => [config.yFunc(y)]), "yhead");
-        else
-          chunk = getChunk(null, null);
+  if (classId) classIds.push(classId);
+  if (drivetrain) classIds.push(...(config.xDict[drivetrain] || []));
+  if (locId) locIds.push(locId);
+  if (surface) locIds.push(...(config.yDict[surface] || []));
 
-        chunk.style.gridColumn = xi + 1;
-        chunk.style.gridRow = yi + 1;
-        grid.appendChild(chunk);
-      })
+  const matching = entries.filter(e => classIds.includes(e.vehicleClassId) && locIds.includes(e.locationId));
+  if (!matching.length) return { percentile: "" };
+  const sum = matching.reduce((s, e) => s + (e.rank / e.totalEntries) * 100, 0);
+  return { percentile: Math.round(sum / matching.length) };
+}
+
+const grid = getElem("div", "score-table-grid");
+
+window.buildTable = function(config) {
+  grid.innerHTML = "";
+
+  Object.entries({ "": null, ...config.xDict }).forEach(([xKey, xVal], xi) => {
+    Object.entries({ "": null, ...config.yDict }).forEach(([yKey, yVal], yi) => {
+      let chunk;
+      if (xKey && yKey)
+        chunk = getChunk(config.dataGroupFunc(xKey, yKey), yVal.map(y => xVal.map(x => config.dataFunc(x, y))), "data");
+      else if (xKey)
+        chunk = getChunk(config.xGroupFunc(xKey), [xVal.map(config.xFunc)], "xhead");
+      else if (yKey)
+        chunk = getChunk(config.yGroupFunc(yKey), yVal.map(y => [config.yFunc(y)]), "yhead");
+      else
+        chunk = getChunk(null, null);
+
+      chunk.style.gridColumn = xi + 1;
+      chunk.style.gridRow = yi + 1;
+      grid.appendChild(chunk);
     })
+  })
 
-    const wrapper = document.querySelector(".table-wrapper");
-    wrapper.appendChild(grid);
+  const wrapper = document.querySelector(".table-wrapper");
+  if (!grid.parentNode) wrapper.appendChild(grid);
 
-    function getChunk(groupVal, cellVals, classStr) {
-      const chunk = getElem("div", "chunk " + classStr);
-      
-      if(groupVal === null || cellVals === null)
-        return chunk;
-
-      const table = getElem("table");
-      const thead = getElem("thead");
-      const headerRow = getElem("tr");
-      const th = getElem("th", null, groupVal);
-      th.colSpan = cellVals[0].length;
-      headerRow.appendChild(th);
-      thead.appendChild(headerRow);
-      table.appendChild(thead);
-
-      const tbody = getElem("tbody");
-      cellVals.forEach((row) => {
-        const tr = getElem("tr");
-        row.forEach((c) => {
-          tr.appendChild(getElem("td", null, c));
-        });
-        tbody.appendChild(tr);
-      });
-      table.appendChild(tbody);
-
-      chunk.appendChild(table);
+  function getChunk(groupVal, cellVals, classStr) {
+    const chunk = getElem("div", "chunk " + classStr);
+    
+    if (groupVal === null || cellVals === null)
       return chunk;
-    }
-  }
 
-  function getElem(tag, className, text) {
-    const elem = document.createElement(tag);
-    if (className) elem.className = className;
-    if (text != null) elem.textContent = text;
-    return elem;
+    const table = getElem("table");
+    const thead = getElem("thead");
+    const headerRow = getElem("tr");
+    const th = getElem("th", null, groupVal);
+    th.colSpan = cellVals[0].length;
+    headerRow.appendChild(th);
+    thead.appendChild(headerRow);
+    table.appendChild(thead);
+
+    const tbody = getElem("tbody");
+    cellVals.forEach((row) => {
+      const tr = getElem("tr");
+      row.forEach((c) => {
+        tr.appendChild(getElem("td", null, c));
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+
+    chunk.appendChild(table);
+    return chunk;
   }
-})();
+};
+
+window.SCORECARD_CONFIG = {
+  xDict: ClassIdsByDrivetrain,
+  xGroupFunc: (drivetrain) => drivetrain,
+  xFunc: (classId) => ClassNameByClassId[classId],
+  yDict: LocIdsBySurface,
+  yGroupFunc: (surface) => surface,
+  yFunc: (locId) => LocNameByLocID[locId],
+  dataGroupFunc: (drivetrain, surface) => getTotals(null, drivetrain, null, surface).percentile,
+  dataFunc: (classId, locId) => getTotals(classId, null, locId, null).percentile,
+};
