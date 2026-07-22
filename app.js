@@ -20,7 +20,7 @@
       })
       .then(function (apiData) {
         window.apiData = apiData;
-        window.buildTable(window.SCORECARD_CONFIG);
+        window.buildTable();
         if (!skipPush) pushUsernameToURL(username);
       })
       .catch(err => alert(err.message));
@@ -29,12 +29,12 @@
   window.addEventListener("popstate", function () {
     var username = getUsernameFromURL();
     if (username) window.fetchProfile(username, true);
-    else window.buildTable(window.SCORECARD_CONFIG);
+    else window.buildTable();
   });
 
   var initialUser = getUsernameFromURL();
   if (initialUser) window.fetchProfile(initialUser, true);
-  else window.buildTable(window.SCORECARD_CONFIG);
+  else window.buildTable();
 
   document.getElementById("profile-name").addEventListener("keydown", function (e) {
     if (e.key === "Enter") {

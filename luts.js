@@ -53,8 +53,37 @@
     26: "Kenya",
     27: "Oceana",
     28: "Iberia",
-    29: "Central Europe",
-    30: "Latvia",
-    31: "Poland",
+     29: "Central Europe",
+     30: "Latvia",
+     31: "Poland",
+   }
+
+  window.LocToStageIds = {
+     5: ["ss1", "ss2", "ss3"],
+     6: ["ss1", "ss2", "ss3"],
+     7: ["ss1", "ss2", "ss3"],
+     8: ["ss1", "ss2", "ss3"],
+     9: ["ss1", "ss2", "ss3"],
+    12: ["ss1", "ss2", "ss3"],
+    13: ["ss1", "ss2", "ss3"],
+    14: ["ss1", "ss2", "ss3"],
+    15: ["ss1", "ss2", "ss3"],
+    16: ["ss1", "ss2", "ss3"],
+    17: ["ss1", "ss2", "ss3"],
+    18: ["ss1", "ss2", "ss3"],
+    24: ["ss1", "ss2", "ss3"],
+    25: ["ss1", "ss2", "ss3"],
+    26: ["ss1", "ss2", "ss3"],
+    27: ["ss1", "ss2", "ss3"],
+    28: ["ss1", "ss2", "ss3"],
+    29: ["ss1", "ss2", "ss3"],
+    30: ["ss1", "ss2", "ss3"],
+    31: ["ss1", "ss2", "ss3"],
+  }
+
+  window.StageNameByStageId = {
+    ss1: "Stage 1",
+    ss2: "Stage 2",
+    ss3: "Stage 3",
   }
 })();

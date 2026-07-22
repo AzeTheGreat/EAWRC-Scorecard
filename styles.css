@@ -103,9 +103,8 @@ html, body {
   user-select: none;
 }
 
-.xhead th:hover,
-.yhead th:hover {
-  background: #e8e8e8;
+.cell:hover {
+  background: rgba(0,0,0,0.05);
 }
 
 .chunk td {
