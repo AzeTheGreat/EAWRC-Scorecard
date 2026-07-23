@@ -57,6 +57,7 @@ function buildTable() {
 
   const wrapper = document.querySelector(".table-wrapper");
   if (!grid.parentNode && wrapper) wrapper.appendChild(grid);
+  updateStatPills();
 }
 
 function buildChunk(xEntry, yEntry) {

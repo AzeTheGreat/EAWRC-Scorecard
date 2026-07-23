@@ -53,6 +53,36 @@ html, body {
   min-width: 20px;
 }
 
+.medal-icons {
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+.medal-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.medal-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.medal-dot.platinum { background: #E5E4E2; border: 1px solid #bbb; }
+.medal-dot.gold     { background: #FFD700; }
+.medal-dot.silver   { background: #C0C0C0; }
+.medal-dot.bronze   { background: #CD7F32; }
+
+.medal-count {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #222;
+}
+
 .profile-input {
   display: flex;
   align-items: center;
