@@ -29,11 +29,23 @@ const CONFIG = {
   },
 };
 
+function makeCellValueFn(getDisplayValue) {
+  return function(xEntry, yEntry) {
+    var filters = {};
+    if (xEntry) filters[xEntry.lvl.levelID] = xEntry.id;
+    if (yEntry) filters[yEntry.lvl.levelID] = yEntry.id;
+    var matching = getFilteredEntries(filters);
+    if (!matching.length) return "";
+    var group = getGroupStats(matching);
+    return group ? getDisplayValue(group) : "";
+  };
+}
 
 // Main
 const state = {};
 const collapsed = new Set();
 const grid = getElem("div", "score-table-grid");
+var cellValueFn = makeCellValueFn(g => Math.round(g.avgPercentile));
 buildTable();
 
 
@@ -64,7 +76,7 @@ function buildChunk(xEntry, yEntry) {
   const isData = xEntry && yEntry;
   const className = isData ? "data" : xEntry ? "xhead" : yEntry ? "yhead" : "corner";
 
-  const valueFn = isData ? getTotals : (x, y) => x?.lvl.label(x.id) ?? y?.lvl.label(y.id) ?? "";
+  const valueFn = isData ? cellValueFn : (x, y) => x?.lvl.label(x.id) ?? y?.lvl.label(y.id) ?? "";
 
   const groupCell = buildCell(xEntry, yEntry, valueFn, true);
 
@@ -150,7 +162,7 @@ function getChunk(className, groupCell, cells) {
 }
 
 function getCollapseArrow(key) {
-  const arrow = getElem("span", "collapse-arrow", collapsed.has(key) ? "▶ " : "▼ ");
+  const arrow = getElem("span", "collapse-arrow", collapsed.has(key) ? "\u25B6 " : "\u25BC ");
   arrow.addEventListener("click", e => {
     e.stopPropagation();
     collapsed.has(key) ? collapsed.delete(key) : collapsed.add(key);

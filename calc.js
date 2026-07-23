@@ -42,17 +42,6 @@ function getFilteredEntries(filters) {
   });
 }
 
-function getTotals(xEntry, yEntry) {
-  var filters = {};
-  if (xEntry) filters[xEntry.lvl.levelID] = xEntry.id;
-  if (yEntry) filters[yEntry.lvl.levelID] = yEntry.id;
-
-  var matching = getFilteredEntries(filters);
-  if (!matching.length) return "";
-
-  var sum = matching.reduce(function(s, e) { return s + (e.rank / e.totalEntries) * 100; }, 0);
-  return Math.round(sum / matching.length);
-}
 
 function getGroupStats(entries) {
   if (!entries || !entries.length) return null;
