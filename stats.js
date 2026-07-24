@@ -8,6 +8,8 @@ function selectStat(el, fn) {
   cellValueFn = makeCellValueFn(fn);
   document.querySelectorAll("[data-stat].active").forEach(e => e.classList.remove("active"));
   el.classList.add("active");
+  var stat = el.getAttribute("data-stat");
+  if (window.setSort) setSort(stat, true);
   buildTable();
 }
 

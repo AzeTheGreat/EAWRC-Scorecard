@@ -70,6 +70,7 @@ function buildTable() {
   const wrapper = document.querySelector(".table-wrapper");
   if (!grid.parentNode && wrapper) wrapper.appendChild(grid);
   updateStatPills();
+  if (typeof renderEntriesView === "function") renderEntriesView();
 }
 
 function buildChunk(xEntry, yEntry) {
