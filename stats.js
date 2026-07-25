@@ -1,15 +1,17 @@
-"use strict";
+import { formatTime, getFilteredEntries, getGroupStats, computePoints } from './calc.js';
+import { state, buildTable, makeCellValueFn } from './table.js';
+import { setSort } from './entries.js';
 
 function setPill(stat, value) {
   document.querySelector('[data-stat="' + stat + '"] .pill-value').textContent = value;
 }
 
 function selectStat(el, fn) {
-  cellValueFn = makeCellValueFn(fn);
+  window.cellValueFn = makeCellValueFn(fn);
   document.querySelectorAll("[data-stat].active").forEach(e => e.classList.remove("active"));
   el.classList.add("active");
   var stat = el.getAttribute("data-stat");
-  if (window.setSort) setSort(stat, true);
+  setSort(stat, true);
   buildTable();
 }
 
@@ -51,3 +53,5 @@ function updateStatPills() {
     el.querySelector(".medal-count").textContent = group ? (group.medalCounts[name] || 0) : "0";
   });
 }
+
+export { updateStatPills };

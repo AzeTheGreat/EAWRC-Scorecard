@@ -1,29 +1,32 @@
-"use strict";
+import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLocID, LocToStageIds, StageNameByStageId } from './luts.js';
+import { getFilteredEntries, getGroupStats } from './calc.js';
+import { updateStatPills } from './stats.js';
+import { renderEntriesView } from './entries.js';
 
 // Table Config
 const CONFIG = {
   xAxis: {
     levelID: "drivetrain",
-    getRootIds: () => Object.keys(window.ClassIdsByDrivetrain),
-    getChildIds: id => window.ClassIdsByDrivetrain[id],
+    getRootIds: () => Object.keys(ClassIdsByDrivetrain),
+    getChildIds: id => ClassIdsByDrivetrain[id],
     label: id => id,
     childLevel: {
       levelID: "class",
-      label: id => window.ClassNameByClassId[id],
+      label: id => ClassNameByClassId[id],
     },
   },
   yAxis: {
     levelID: "surface",
-    getRootIds: () => Object.keys(window.LocIdsBySurface),
-    getChildIds: id => window.LocIdsBySurface[id],
+    getRootIds: () => Object.keys(LocIdsBySurface),
+    getChildIds: id => LocIdsBySurface[id],
     label: id => id,
     childLevel: {
       levelID: "location",
-      getChildIds: id => window.LocToStageIds[id],
-      label: id => window.LocNameByLocID[id],
+      getChildIds: id => LocToStageIds[id],
+      label: id => LocNameByLocID[id],
       childLevel: {
         levelID: "stage",
-        label: id => window.StageNameByStageId[id],
+        label: id => StageNameByStageId[id],
       },
     },
   },
@@ -45,9 +48,7 @@ function makeCellValueFn(getDisplayValue) {
 const state = {};
 const collapsed = new Set();
 const grid = getElem("div", "score-table-grid");
-var cellValueFn = makeCellValueFn(g => Math.round(g.avgPercentile));
-buildTable();
-
+window.cellValueFn = makeCellValueFn(g => Math.round(g.avgPercentile));
 
 // Build UI
 function buildTable() {
@@ -70,14 +71,14 @@ function buildTable() {
   const wrapper = document.querySelector(".table-wrapper");
   if (!grid.parentNode && wrapper) wrapper.appendChild(grid);
   updateStatPills();
-  if (typeof renderEntriesView === "function") renderEntriesView();
+  renderEntriesView();
 }
 
 function buildChunk(xEntry, yEntry) {
   const isData = xEntry && yEntry;
   const className = isData ? "data" : xEntry ? "xhead" : yEntry ? "yhead" : "corner";
 
-  const valueFn = isData ? cellValueFn : (x, y) => x?.lvl.label(x.id) ?? y?.lvl.label(y.id) ?? "";
+  const valueFn = isData ? window.cellValueFn : (x, y) => x?.lvl.label(x.id) ?? y?.lvl.label(y.id) ?? "";
 
   const groupCell = buildCell(xEntry, yEntry, valueFn, true);
 
@@ -178,3 +179,5 @@ function getElem(tag, className, text) {
   if (text != null) elem.textContent = text;
   return elem;
 }
+
+export { state, makeCellValueFn, buildTable, getElem };

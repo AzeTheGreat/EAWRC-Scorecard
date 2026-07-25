@@ -1,4 +1,4 @@
-"use strict";
+import { ClassIdsByDrivetrain, LocIdsBySurface } from './luts.js';
 
 function avg(arr) {
   return arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : null;
@@ -13,7 +13,7 @@ function parseTime(timeStr) {
 }
 
 function formatTime(secs) {
-  if (secs == null || isNaN(secs)) return "—";
+  if (secs == null || isNaN(secs)) return "\u2014";
   var min = Math.floor(secs / 60);
   var s = secs % 60;
   return min + ":" + s.toFixed(1).padStart(4, "0");
@@ -34,9 +34,9 @@ function getFilteredEntries(filters) {
   return entries.filter(function(e) {
     return (
       (!filters.class || e.vehicleClassId === filters.class) &&
-      (!filters.drivetrain || (window.ClassIdsByDrivetrain[filters.drivetrain] || []).includes(e.vehicleClassId)) &&
+      (!filters.drivetrain || (ClassIdsByDrivetrain[filters.drivetrain] || []).includes(e.vehicleClassId)) &&
       (!filters.location || e.locationId === filters.location) &&
-      (!filters.surface || (window.LocIdsBySurface[filters.surface] || []).includes(e.locationId)) &&
+      (!filters.surface || (LocIdsBySurface[filters.surface] || []).includes(e.locationId)) &&
       (!filters.stage || e.routeId === filters.stage)
     );
   });
@@ -81,3 +81,5 @@ function computePoints(entries) {
 
   return { totalPoints: totalPoints, skillPoints: skillPoints };
 }
+
+export { parseTime, formatTime, getFilteredEntries, getGroupStats, computePoints };

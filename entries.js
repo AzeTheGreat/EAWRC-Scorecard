@@ -1,4 +1,6 @@
-"use strict";
+import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from './luts.js';
+import { parseTime, formatTime, getFilteredEntries } from './calc.js';
+import { state, getElem } from './table.js';
 
 var entriesSort = { column: "percentile", isAscending: true };
 
@@ -46,9 +48,9 @@ function renderEntriesView() {
   sorted.forEach(function (e) {
     var tr = document.createElement("tr");
 
-    var stageName = window.StageNameByStageId[e.routeId] || e.routeId;
-    var locationName = window.LocNameByLocID[e.locationId] || "";
-    var className = window.ClassNameByClassId[e.vehicleClassId] || "";
+    var stageName = StageNameByStageId[e.routeId] || e.routeId;
+    var locationName = LocNameByLocID[e.locationId] || "";
+    var className = ClassNameByClassId[e.vehicleClassId] || "";
     var weather = e.surfaceCondition == 1 ? "Wet" : "Dry";
     var stageTd = getElem("td");
     stageTd.innerHTML =
@@ -77,3 +79,5 @@ function compareEntries(a, b, column) {
   }
   return 0;
 }
+
+export { setSort, renderEntriesView };
