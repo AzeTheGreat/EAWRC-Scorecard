@@ -41,10 +41,9 @@ function renderEntriesView() {
   var tbody = document.querySelector("#entries-table tbody");
   tbody.innerHTML = "";
 
-  var raw = getFilteredEntries(state);
-  var withStats = raw.map(function(e) { return { entry: e, stats: getStat([e]) }; });
-  withStats.sort(function(a, b) {
-    var cmp = compareEntries(a.stats, b.stats, entriesSort.column);
+  var withStats = getFilteredEntries(state).map(e => ({ entry: e, stats: getStat([e]) }));
+  withStats.sort((a, b) => {
+    var cmp = (a.stats[entriesSort.column]) - (b.stats[entriesSort.column]);
     return entriesSort.isAscending ? cmp : -cmp;
   });
 
@@ -69,18 +68,6 @@ function renderEntriesView() {
 
     tbody.appendChild(tr);
   });
-}
-
-function compareEntries(a, b, column) {
-  switch (column) {
-    case "placement":
-      return a.placement - b.placement;
-    case "percentile":
-      return a.percentile - b.percentile;
-    case "delta":
-      return (a.delta || 0) - (b.delta || 0);
-  }
-  return 0;
 }
 
 export { setSort, renderEntriesView };
