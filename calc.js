@@ -13,22 +13,13 @@ function parseTime(timeStr) {
 }
 
 function computePoints(entries) {
-  var scores = [];
-  entries.forEach(function(e) {
-    var pct = e.rank / e.totalEntries;
-    if (pct > 0) scores.push(1 / pct);
-  });
-
-  var totalPoints = scores.reduce((s, v) => s + v, 0);
-
+  const scores = entries.map(e => 1 / (e.rank / e.totalEntries));
   scores.sort((a, b) => b - a);
-  var top100 = scores.slice(0, 100);
-  var skillPoints = 0;
-  top100.forEach((score, i) => {
-    skillPoints += score * Math.pow(0.95, i);
-  });
 
-  return { totalPoints: totalPoints, skillPoints: skillPoints };
+  return { 
+    totalPoints: scores.reduce((s, v) => s + v, 0),
+    skillPoints: scores.slice(0, 100).reduce((sum, score, i) => sum + score * Math.pow(0.95, i), 0)
+  };
 }
 
 function getFilteredEntries(filters) {
