@@ -1,5 +1,5 @@
 import { getFilteredEntries, getStat, formatTime } from './calc.js';
-import { state, buildTable, makeCellValueFn } from './table.js';
+import { state, buildTable, setCellValueFn } from './table.js';
 import { setSort } from './entries.js';
 
 function setPill(stat, value) {
@@ -7,7 +7,7 @@ function setPill(stat, value) {
 }
 
 function selectStat(el, getDisplayStr) {
-  window.cellValueFn = makeCellValueFn(getDisplayStr);
+  setCellValueFn(getDisplayStr);
   document.querySelectorAll("[data-stat].active").forEach(function(e) { e.classList.remove("active"); });
   el.classList.add("active");
   var stat = el.getAttribute("data-stat");
@@ -32,12 +32,8 @@ document.querySelector('[data-stat="percentile"]').classList.add("active");
 
 function updateStatPills() {
   var entries = window.apiData?.entries;
-  var filters = {};
-  for (var k in state) {
-    if (state[k] != null) filters[k] = state[k];
-  }
   var allEntries = window.apiData?.entries || [];
-  var matching = entries ? getFilteredEntries(filters) : [];
+  var matching = entries ? getFilteredEntries(state) : [];
 
   var allStats   = getStat(allEntries);
   var matchStats = getStat(matching);

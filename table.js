@@ -33,22 +33,11 @@ const CONFIG = {
   },
 };
 
-function makeCellValueFn(getDisplayStr) {
-  return function(xEntry, yEntry) {
-    var filters = {};
-    if (xEntry) filters[xEntry.lvl.levelID] = xEntry.id;
-    if (yEntry) filters[yEntry.lvl.levelID] = yEntry.id;
-    var matching = getFilteredEntries(filters);
-    if (!matching.length) return "";
-    return getDisplayStr(getStat(matching));
-  };
-}
-
 // Main
 const state = {};
 const collapsed = new Set();
 const grid = getElem("div", "score-table-grid");
-window.cellValueFn = makeCellValueFn(function(s) { return Math.round(s.percentile) + ""; });
+let cellValueFn = s => Math.round(s.percentile);
 
 // Build UI
 function buildTable() {
@@ -75,13 +64,21 @@ function buildTable() {
 }
 
 function buildChunk(xEntry, yEntry) {
+  const getHeaderStr = (xe, ye) => xe?.lvl.label(xe.id) ?? ye?.lvl.label(ye.id) ?? "";
+  const getValStr = (xe, ye) => {
+    var filters = {};
+    if (xe) filters[xe.lvl.levelID] = xe.id;
+    if (ye) filters[ye.lvl.levelID] = ye.id;
+
+    const entries = getFilteredEntries(filters);
+    return entries.length ? cellValueFn(getStat(entries)) : "";
+  } 
+
   const isData = xEntry && yEntry;
   const className = isData ? "data" : xEntry ? "xhead" : yEntry ? "yhead" : "corner";
-
-  const valueFn = isData ? window.cellValueFn : (x, y) => x?.lvl.label(x.id) ?? y?.lvl.label(y.id) ?? "";
+  const valueFn = isData ? getValStr : getHeaderStr;
 
   const groupCell = buildCell(xEntry, yEntry, valueFn, true);
-
   const groupEntry = xEntry || yEntry;
   if (!isData && groupEntry?.lvl.childLevel) {
     const key = `${groupEntry.lvl.levelID}:${groupEntry.id}`;
@@ -144,4 +141,5 @@ function getChildren(entry) {
   return lvl.getChildIds(id).map(cid => ({ lvl: lvl.childLevel, id: cid }));
 }
 
-export { state, makeCellValueFn, buildTable };
+export function setCellValueFn(fn) { cellValueFn = fn; }
+export { state, buildTable };
