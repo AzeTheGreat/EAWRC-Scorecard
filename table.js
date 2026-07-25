@@ -2,6 +2,7 @@ import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLoc
 import { getFilteredEntries, getStat } from './calc.js';
 import { updateStatPills } from './stats.js';
 import { renderEntriesView } from './entries.js';
+import { getElem, getChunk, getCollapseArrow } from './dom.js';
 
 // Table Config
 const CONFIG = {
@@ -83,7 +84,15 @@ function buildChunk(xEntry, yEntry) {
 
   const groupEntry = xEntry || yEntry;
   if (!isData && groupEntry?.lvl.childLevel) {
-    groupCell.insertBefore(getCollapseArrow(`${groupEntry.lvl.levelID}:${groupEntry.id}`), groupCell.firstChild);
+    const key = `${groupEntry.lvl.levelID}:${groupEntry.id}`;
+    var arrow = getCollapseArrow(
+      collapsed.has(key),
+      () => {
+        collapsed.has(key) ? collapsed.delete(key) : collapsed.add(key);
+        buildTable();
+      });
+
+    groupCell.insertBefore(arrow, groupCell.firstChild);
   }
 
   const cells = getChildren(yEntry).map(y => getChildren(xEntry).map(x => buildCell(x, y, valueFn)));
@@ -135,48 +144,4 @@ function getChildren(entry) {
   return lvl.getChildIds(id).map(cid => ({ lvl: lvl.childLevel, id: cid }));
 }
 
-
-// Get HTML
-function getChunk(className, groupCell, cells) {
-  const chunk = getElem("div", "chunk " + className);
-  const table = getElem("table");
-  const thead = getElem("thead");
-  const headerRow = getElem("tr");
-  groupCell.colSpan = cells[0]?.length ?? 1;
-
-  headerRow.appendChild(groupCell);
-  thead.appendChild(headerRow);
-  table.appendChild(thead);
-
-  if (cells.length && !(cells.length === 1 && cells[0].length === 1)) {
-    const tbody = getElem("tbody");
-    cells.forEach(row => {
-      const tr = getElem("tr");
-      row.forEach(td => tr.appendChild(td));
-      tbody.appendChild(tr);
-    });
-    table.appendChild(tbody);
-  }
-
-  chunk.appendChild(table);
-  return chunk;
-}
-
-function getCollapseArrow(key) {
-  const arrow = getElem("span", "collapse-arrow", collapsed.has(key) ? "\u25B6 " : "\u25BC ");
-  arrow.addEventListener("click", e => {
-    e.stopPropagation();
-    collapsed.has(key) ? collapsed.delete(key) : collapsed.add(key);
-    buildTable();
-  });
-  return arrow;
-}
-
-function getElem(tag, className, text) {
-  const elem = document.createElement(tag);
-  if (className) elem.className = className;
-  if (text != null) elem.textContent = text;
-  return elem;
-}
-
-export { state, makeCellValueFn, buildTable, getElem };
+export { state, makeCellValueFn, buildTable };

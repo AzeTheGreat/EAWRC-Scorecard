@@ -1,6 +1,7 @@
 import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from './luts.js';
 import { getFilteredEntries, getStat, formatTime } from './calc.js';
-import { state, getElem } from './table.js';
+import { state } from './table.js';
+import { getElem } from './dom.js';
 
 var entriesSort = { column: "percentile", isAscending: true };
 
