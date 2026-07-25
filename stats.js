@@ -1,4 +1,4 @@
-import { formatTime, getFilteredEntries, getGroupStats, computePoints } from './calc.js';
+import { getFilteredEntries, getStat, formatTime } from './calc.js';
 import { state, buildTable, makeCellValueFn } from './table.js';
 import { setSort } from './entries.js';
 
@@ -6,27 +6,27 @@ function setPill(stat, value) {
   document.querySelector('[data-stat="' + stat + '"] .pill-value').textContent = value;
 }
 
-function selectStat(el, fn) {
-  window.cellValueFn = makeCellValueFn(fn);
-  document.querySelectorAll("[data-stat].active").forEach(e => e.classList.remove("active"));
+function selectStat(el, getDisplayStr) {
+  window.cellValueFn = makeCellValueFn(getDisplayStr);
+  document.querySelectorAll("[data-stat].active").forEach(function(e) { e.classList.remove("active"); });
   el.classList.add("active");
   var stat = el.getAttribute("data-stat");
   setSort(stat, true);
   buildTable();
 }
 
-function registerStat(stat, fn) {
+function registerStat(stat, getDisplayStr) {
   var el = document.querySelector('[data-stat="' + stat + '"]');
-  if (el) el.addEventListener("click", function() { selectStat(el, fn); });
+  if (el) el.addEventListener("click", () => selectStat(el, getDisplayStr));
 }
 
-registerStat("percentile",     g => Math.round(g.avgPercentile));
-registerStat("delta",          g => g.avgDelta != null ? formatTime(g.avgDelta) : "\u2014");
-registerStat("placement",      g => g.avgPlacement != null ? g.avgPlacement.toFixed(1) : "\u2014");
-registerStat("medal-WR",       g => g.medalCounts["WR"] || 0);
-registerStat("medal-#2",       g => g.medalCounts["#2"] || 0);
-registerStat("medal-#3",       g => g.medalCounts["#3"] || 0);
-registerStat("medal-Top 10",   g => g.medalCounts["Top 10"] || 0);
+registerStat("percentile", s => Math.round(s.percentile) + "");
+registerStat("delta", s => formatTime(s.delta));
+registerStat("placement", s => s.placement != null ? s.placement.toFixed(1) : "\u2014");
+registerStat("medal1", s => (s.medal1 || 0) + "");
+registerStat("medal2", s => (s.medal2 || 0) + "");
+registerStat("medal3", s => (s.medal3 || 0) + "");
+registerStat("medal10", s => (s.medal10 || 0) + "");
 
 document.querySelector('[data-stat="percentile"]').classList.add("active");
 
@@ -39,18 +39,18 @@ function updateStatPills() {
   var allEntries = window.apiData?.entries || [];
   var matching = entries ? getFilteredEntries(filters) : [];
 
-  var group = matching.length ? getGroupStats(matching) : null;
-  var points = allEntries.length ? computePoints(allEntries) : null;
+  var allStats   = getStat(allEntries);
+  var matchStats = getStat(matching);
 
-  setPill("sp", points ? Math.round(points.skillPoints) : "");
-  setPill("tp", points ? Math.round(points.totalPoints) : "");
-  setPill("percentile", group ? Math.round(group.avgPercentile) : "");
-  setPill("delta", group && group.avgDelta != null ? formatTime(group.avgDelta) : "\u2014");
-  setPill("placement", group && group.avgPlacement != null ? group.avgPlacement.toFixed(1) : "\u2014");
+  setPill("sp",         allStats.sp != null ? Math.round(allStats.sp) + "" : "");
+  setPill("tp",         allStats.tp != null ? Math.round(allStats.tp) + "" : "");
+  setPill("percentile", matchStats.percentile != null ? Math.round(matchStats.percentile) + "" : "");
+  setPill("delta",      formatTime(matchStats.delta));
+  setPill("placement",  matchStats.placement != null ? matchStats.placement.toFixed(1) : "\u2014");
 
-  document.querySelectorAll('[data-stat="medals"] .medal-icon').forEach(el => {
-    var name = el.getAttribute("data-stat").slice(6);
-    el.querySelector(".medal-count").textContent = group ? (group.medalCounts[name] || 0) : "0";
+  document.querySelectorAll('[data-stat="medals"] .medal-icon').forEach(function(el) {
+    var statKey = el.getAttribute("data-stat");
+    el.querySelector(".medal-count").textContent = matchStats[statKey] || 0;
   });
 }
 

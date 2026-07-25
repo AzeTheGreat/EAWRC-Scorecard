@@ -1,5 +1,5 @@
 import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLocID, LocToStageIds, StageNameByStageId } from './luts.js';
-import { getFilteredEntries, getGroupStats } from './calc.js';
+import { getFilteredEntries, getStat } from './calc.js';
 import { updateStatPills } from './stats.js';
 import { renderEntriesView } from './entries.js';
 
@@ -32,15 +32,14 @@ const CONFIG = {
   },
 };
 
-function makeCellValueFn(getDisplayValue) {
+function makeCellValueFn(getDisplayStr) {
   return function(xEntry, yEntry) {
     var filters = {};
     if (xEntry) filters[xEntry.lvl.levelID] = xEntry.id;
     if (yEntry) filters[yEntry.lvl.levelID] = yEntry.id;
     var matching = getFilteredEntries(filters);
     if (!matching.length) return "";
-    var group = getGroupStats(matching);
-    return group ? getDisplayValue(group) : "";
+    return getDisplayStr(getStat(matching));
   };
 }
 
@@ -48,7 +47,7 @@ function makeCellValueFn(getDisplayValue) {
 const state = {};
 const collapsed = new Set();
 const grid = getElem("div", "score-table-grid");
-window.cellValueFn = makeCellValueFn(g => Math.round(g.avgPercentile));
+window.cellValueFn = makeCellValueFn(function(s) { return Math.round(s.percentile) + ""; });
 
 // Build UI
 function buildTable() {

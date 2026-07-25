@@ -1,5 +1,5 @@
 import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from './luts.js';
-import { parseTime, formatTime, getFilteredEntries } from './calc.js';
+import { getFilteredEntries, getStat, formatTime } from './calc.js';
 import { state, getElem } from './table.js';
 
 var entriesSort = { column: "percentile", isAscending: true };
@@ -40,12 +40,16 @@ function renderEntriesView() {
   var tbody = document.querySelector("#entries-table tbody");
   tbody.innerHTML = "";
 
-  var sorted = getFilteredEntries(state).sort((a, b) => {
-    var cmp = compareEntries(a, b, entriesSort.column);
+  var raw = getFilteredEntries(state);
+  var withStats = raw.map(function(e) { return { entry: e, stats: getStat([e]) }; });
+  withStats.sort(function(a, b) {
+    var cmp = compareEntries(a.stats, b.stats, entriesSort.column);
     return entriesSort.isAscending ? cmp : -cmp;
   });
 
-  sorted.forEach(function (e) {
+  withStats.forEach(function(es) {
+    var e = es.entry;
+    var s = es.stats;
     var tr = document.createElement("tr");
 
     var stageName = StageNameByStageId[e.routeId] || e.routeId;
@@ -59,10 +63,8 @@ function renderEntriesView() {
     tr.appendChild(stageTd);
 
     tr.appendChild(getElem("td", null, e.rank));
-    tr.appendChild(getElem("td", null, Math.round((e.rank / e.totalEntries) * 100)));
-
-    var deltaSecs = parseTime(e.differenceToFirst);
-    tr.appendChild(getElem("td", null, deltaSecs != null ? formatTime(deltaSecs) : "\u2014"));
+    tr.appendChild(getElem("td", null, s.percentile != null ? Math.round(s.percentile) + "" : ""));
+    tr.appendChild(getElem("td", null, formatTime(s.delta)));
 
     tbody.appendChild(tr);
   });
@@ -71,11 +73,11 @@ function renderEntriesView() {
 function compareEntries(a, b, column) {
   switch (column) {
     case "placement":
-      return a.rank - b.rank;
+      return a.placement - b.placement;
     case "percentile":
-      return a.rank / a.totalEntries - b.rank / b.totalEntries;
+      return a.percentile - b.percentile;
     case "delta":
-      return (parseTime(a.differenceToFirst) || 0) - (parseTime(b.differenceToFirst) || 0);
+      return (a.delta || 0) - (b.delta || 0);
   }
   return 0;
 }
