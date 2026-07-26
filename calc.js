@@ -1,4 +1,5 @@
 import { ClassIdsByDrivetrain, LocIdsBySurface } from './luts.js';
+import { getApiData } from './apiData.js';
 
 function avg(arr) {
   return arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : null;
@@ -23,7 +24,7 @@ function computePoints(entries) {
 }
 
 function getFilteredEntries(filters) {
-  var entries = window.apiData?.entries;
+  var entries = getApiData()?.entries;
   if (!entries) return [];
 
   return entries.filter(function(e) {

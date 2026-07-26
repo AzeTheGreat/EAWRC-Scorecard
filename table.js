@@ -1,8 +1,8 @@
 import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLocID, LocToStageIds, StageNameByStageId } from './luts.js';
 import { getFilteredEntries, getStat } from './calc.js';
-import { updateStatPills } from './stats.js';
-import { renderEntriesView } from './entries.js';
 import { getElem, getChunk, getCollapseArrow } from './dom.js';
+import { getState, setState, getSelectedStat } from './scorecardState.js';
+import { scorecardStatDefs } from './statDefs.js';
 
 // Table Config
 const CONFIG = {
@@ -34,10 +34,8 @@ const CONFIG = {
 };
 
 // Main
-const state = {};
 const collapsed = new Set();
 const grid = getElem("div", "score-table-grid");
-let cellValueFn = s => Math.round(s.percentile);
 
 // Build UI
 function buildTable() {
@@ -59,8 +57,6 @@ function buildTable() {
 
   const wrapper = document.querySelector(".table-wrapper");
   if (!grid.parentNode && wrapper) wrapper.appendChild(grid);
-  updateStatPills();
-  renderEntriesView();
 }
 
 function buildChunk(xEntry, yEntry) {
@@ -71,7 +67,7 @@ function buildChunk(xEntry, yEntry) {
     if (ye) filters[ye.lvl.levelID] = ye.id;
 
     const entries = getFilteredEntries(filters);
-    return entries.length ? cellValueFn(getStat(entries)) : "";
+    return entries.length ? scorecardStatDefs[getSelectedStat()](getStat(entries)) : "";
   } 
 
   const isData = xEntry && yEntry;
@@ -98,32 +94,34 @@ function buildChunk(xEntry, yEntry) {
 }
 
 function buildCell(xEntry, yEntry, valueFn, isHeader) {
+  const state = getState();
   const hasClick = xEntry && yEntry
     ? state[xEntry.lvl.levelID] !== xEntry.id || state[yEntry.lvl.levelID] !== yEntry.id
     : xEntry || yEntry || Object.values(state).some(v => v != null);
   const el = getElem(isHeader ? "th" : "td", hasClick ? "cell" : null, valueFn(xEntry, yEntry));
   if (hasClick) {
     el.style.cursor = "pointer";
-    el.addEventListener("click", () => pinAndRerender(xEntry, yEntry));
+    el.addEventListener("click", () => pinAndRerender(state, xEntry, yEntry));
   }
   return el;
 }
 
-function pinAndRerender(xEntry, yEntry) {
+function pinAndRerender(state, xEntry, yEntry) {
   const togglePin = (def, id) => state[def.levelID] = state[def.levelID] === id ? null : id;
   if (xEntry) togglePin(xEntry.lvl, xEntry.id);
   if (yEntry) togglePin(yEntry.lvl, yEntry.id);
   if (!xEntry && !yEntry) Object.keys(state).forEach(k => state[k] = null);
-  buildTable();
+  setState(state);
 }
 
 function buildLists(root) {
-  const levelDef = findDeepestPinned(state, root);
+  const state = getState();
+  const levelDef = findDeepestPinned(root);
   const pinnedId = state[levelDef.levelID];
   const ids = pinnedId != null ? [pinnedId] : levelDef.getRootIds();
   return ids.map(id => ({ lvl: levelDef, id }));
 
-  function findDeepestPinned(state, root) {
+  function findDeepestPinned(root) {
     let deepest = root;
     let cur = root;
     while (cur) {
@@ -141,5 +139,4 @@ function getChildren(entry) {
   return lvl.getChildIds(id).map(cid => ({ lvl: lvl.childLevel, id: cid }));
 }
 
-export function setCellValueFn(fn) { cellValueFn = fn; }
-export { state, buildTable };
+export { buildTable };

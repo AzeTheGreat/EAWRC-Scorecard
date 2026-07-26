@@ -1,4 +1,13 @@
 import { buildTable } from './table.js';
+import { updateStatPills } from './stats.js';
+import { renderEntriesView } from './entries.js';
+import { setApiData } from './apiData.js';
+
+function render() {
+  buildTable();
+  updateStatPills();
+  renderEntriesView();
+}
 
 function getUsernameFromURL() {
   var params = new URLSearchParams(window.location.search);
@@ -18,8 +27,8 @@ window.fetchProfile = function (username, skipPush) {
       return res.json();
     })
     .then(function (apiData) {
-      window.apiData = apiData;
-      buildTable();
+      setApiData(apiData);
+      render();
       if (!skipPush) pushUsernameToURL(username);
     })
     .catch(err => alert(err.message));
@@ -28,12 +37,12 @@ window.fetchProfile = function (username, skipPush) {
 window.addEventListener("popstate", function () {
   var username = getUsernameFromURL();
   if (username) window.fetchProfile(username, true);
-  else buildTable();
+  else render();
 });
 
 var initialUser = getUsernameFromURL();
 if (initialUser) window.fetchProfile(initialUser, true);
-else buildTable();
+else render();
 
 document.getElementById("profile-name").addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
@@ -41,3 +50,5 @@ document.getElementById("profile-name").addEventListener("keydown", function (e)
     if (name) window.fetchProfile(name);
   }
 });
+
+export { render };

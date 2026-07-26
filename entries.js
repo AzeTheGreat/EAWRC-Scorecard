@@ -1,7 +1,7 @@
 import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from './luts.js';
 import { getFilteredEntries, getStat } from './calc.js';
-import { formatTime } from './util.js';
-import { state } from './table.js';
+import { scorecardStatDefs } from './statDefs.js';
+import { getState } from './scorecardState.js';
 import { getElem } from './dom.js';
 
 var entriesSort = { column: "percentile", isAscending: true };
@@ -9,11 +9,11 @@ var entriesSort = { column: "percentile", isAscending: true };
 function setSort(colName, isAscending) {
   entriesSort.column = colName;
   entriesSort.isAscending = isAscending;
+  renderEntriesView()
 }
 
 function toggleSort(col) {
   setSort(col, entriesSort.column === col ? !entriesSort.isAscending : true);
-  renderEntriesView();
 }
 
 function rebuildHeader() {
@@ -42,7 +42,7 @@ function renderEntriesView() {
   var tbody = document.querySelector("#entries-table tbody");
   tbody.innerHTML = "";
 
-  var withStats = getFilteredEntries(state).map(e => ({ entry: e, stats: getStat([e]) }));
+  var withStats = getFilteredEntries(getState()).map(e => ({ entry: e, stats: getStat([e]) }));
   withStats.sort((a, b) => {
     var cmp = (a.stats[entriesSort.column]) - (b.stats[entriesSort.column]);
     return entriesSort.isAscending ? cmp : -cmp;
@@ -64,8 +64,8 @@ function renderEntriesView() {
     tr.appendChild(stageTd);
 
     tr.appendChild(getElem("td", null, e.rank));
-    tr.appendChild(getElem("td", null, s.percentile != null ? Math.round(s.percentile) + "" : ""));
-    tr.appendChild(getElem("td", null, formatTime(s.delta)));
+    tr.appendChild(getElem("td", null, s.percentile != null ? scorecardStatDefs.percentile(s) : ""));
+    tr.appendChild(getElem("td", null, scorecardStatDefs.delta(s)));
 
     tbody.appendChild(tr);
   });
