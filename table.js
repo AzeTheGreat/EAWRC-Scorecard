@@ -62,7 +62,9 @@ function buildTable() {
 function buildChunk(xEntry, yEntry) {
   const getHeaderStr = (xe, ye) => xe?.lvl.label(xe.id) ?? ye?.lvl.label(ye.id) ?? "";
   const getValStr = (xe, ye) => {
-    var filters = {};
+    // buildCell is called with only child entries, which can be null when drilled-down.
+    // Thus, filters need to include current drill-down state.
+    var filters = { ...getState() };
     if (xe) filters[xe.lvl.levelID] = xe.id;
     if (ye) filters[ye.lvl.levelID] = ye.id;
 
