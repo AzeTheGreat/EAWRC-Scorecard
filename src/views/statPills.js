@@ -1,8 +1,8 @@
 import { getFilteredEntries } from '../core/entryFilters.js';
-import { getStat } from '../core/calc.js';
+import { getStats } from '../core/calc.js';
 import { getState, setSelectedStat } from '../state/scorecardState.js';
 import { profileStatDefs, scorecardStatDefs } from '../core/statDefs.js';
-import { setSort } from './entries.js';
+import { setSort } from './listView.js';
 import { getApiData } from '../state/apiData.js';
 
 registerStatPillClicks();
@@ -10,14 +10,14 @@ document.querySelector('[data-stat="percentile"]').classList.add("active");
 
 function updateStatPills() {
   // Profile
-  var allStats = getStat(getApiData()?.entries);
+  var allStats = getStats(getApiData()?.entries);
   Object.entries(profileStatDefs).forEach(function([stat, fn]) {
     var pill = document.querySelector('[data-stat="' + stat + '"] .pill-value');
     if (pill) pill.textContent = fn(allStats);
   });
 
   // Aggregates
-  var stats = getStat(getFilteredEntries(getState()));
+  var stats = getStats(getFilteredEntries(getState()));
   Object.entries(scorecardStatDefs).forEach(function([stat, fn]) {
     var pill = document.querySelector('[data-stat="' + stat + '"] .pill-value');
     if (pill) pill.textContent = fn(stats);

@@ -1,20 +1,20 @@
 import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from '../core/luts.js';
 import { getFilteredEntries } from '../core/entryFilters.js';
-import { getStat } from '../core/calc.js';
+import { getStats } from '../core/calc.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
 import { getState } from '../state/scorecardState.js';
 import { getElem } from '../lib/dom.js';
 
-var entriesSort = { column: "percentile", isAscending: true };
+var sortState = { column: "percentile", isAscending: true };
 
 function setSort(colName, isAscending) {
-  entriesSort.column = colName;
-  entriesSort.isAscending = isAscending;
-  renderEntriesView()
+  sortState.column = colName;
+  sortState.isAscending = isAscending;
+  renderListView()
 }
 
 function toggleSort(col) {
-  setSort(col, entriesSort.column === col ? !entriesSort.isAscending : true);
+  setSort(col, sortState.column === col ? !sortState.isAscending : true);
 }
 
 function rebuildHeader() {
@@ -29,7 +29,7 @@ function rebuildHeader() {
   ];
   cols.forEach(function (c) {
     var label = c.label;
-    if (c.col === entriesSort.column) label += " " + (entriesSort.isAscending ? "\u25B4" : "\u25BE");
+    if (c.col === sortState.column) label += " " + (sortState.isAscending ? "\u25B4" : "\u25BE");
     var th = getElem("th", "entriesHead", label);
     if (c.col) th.addEventListener("click", toggleSort.bind(null, c.col));
     tr.appendChild(th);
@@ -37,16 +37,16 @@ function rebuildHeader() {
   thead.appendChild(tr);
 }
 
-function renderEntriesView() {
+function renderListView() {
   rebuildHeader();
 
   var tbody = document.querySelector("#entries-table tbody");
   tbody.innerHTML = "";
 
-  var withStats = getFilteredEntries(getState()).map(e => ({ entry: e, stats: getStat([e]) }));
+  var withStats = getFilteredEntries(getState()).map(e => ({ entry: e, stats: getStats([e]) }));
   withStats.sort((a, b) => {
-    var cmp = (a.stats[entriesSort.column]) - (b.stats[entriesSort.column]);
-    return entriesSort.isAscending ? cmp : -cmp;
+    var cmp = (a.stats[sortState.column]) - (b.stats[sortState.column]);
+    return sortState.isAscending ? cmp : -cmp;
   });
 
   withStats.forEach(function(es) {
@@ -72,4 +72,4 @@ function renderEntriesView() {
   });
 }
 
-export { setSort, renderEntriesView };
+export { setSort, renderListView };

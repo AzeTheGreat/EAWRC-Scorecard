@@ -1,6 +1,6 @@
 import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLocID, LocToStageIds, StageNameByStageId } from '../core/luts.js';
 import { getFilteredEntries } from '../core/entryFilters.js';
-import { getStat } from '../core/calc.js';
+import { getStats } from '../core/calc.js';
 import { getElem, getChunk, getCollapseArrow } from '../lib/dom.js';
 import { getState, setState, getSelectedStat } from '../state/scorecardState.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
@@ -39,7 +39,7 @@ const collapsed = new Set();
 const grid = getElem("div", "score-table-grid");
 
 // Build UI
-function buildTable() {
+function renderMatrixView() {
   grid.innerHTML = "";
   const xLists = buildLists(CONFIG.xAxis);
   const yLists = buildLists(CONFIG.yAxis);
@@ -70,7 +70,7 @@ function buildChunk(xEntry, yEntry) {
     if (ye) filters[ye.lvl.levelID] = ye.id;
 
     const entries = getFilteredEntries(filters);
-    return entries.length ? scorecardStatDefs[getSelectedStat()](getStat(entries)) : "";
+    return entries.length ? scorecardStatDefs[getSelectedStat()](getStats(entries)) : "";
   } 
 
   const isData = xEntry && yEntry;
@@ -85,7 +85,7 @@ function buildChunk(xEntry, yEntry) {
       collapsed.has(key),
       () => {
         collapsed.has(key) ? collapsed.delete(key) : collapsed.add(key);
-        buildTable();
+        renderMatrixView();
       });
 
     groupCell.insertBefore(arrow, groupCell.firstChild);
@@ -142,4 +142,4 @@ function getChildren(entry) {
   return lvl.getChildIds(id).map(cid => ({ lvl: lvl.childLevel, id: cid }));
 }
 
-export { buildTable };
+export { renderMatrixView };

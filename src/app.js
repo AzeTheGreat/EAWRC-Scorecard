@@ -1,12 +1,12 @@
-import { buildTable } from './views/table.js';
-import { updateStatPills } from './views/stats.js';
-import { renderEntriesView } from './views/entries.js';
+import { renderMatrixView } from './views/matrixView.js';
+import { updateStatPills } from './views/statPills.js';
+import { renderListView } from './views/listView.js';
 import { setApiData } from './state/apiData.js';
 
 function render() {
-  buildTable();
+  renderMatrixView();
   updateStatPills();
-  renderEntriesView();
+  renderListView();
 }
 
 function getUsernameFromURL() {

@@ -10,7 +10,7 @@ function computePoints(entries) {
   };
 }
 
-function getStat(entries) {
+function getStats(entries) {
   var s = {
     sp: null, tp: null,
     percentile: null, placement: null, delta: null,
@@ -35,4 +35,4 @@ function getStat(entries) {
   return s;
 }
 
-export { getStat };
+export { getStats };
