@@ -1,6 +1,5 @@
-import { getFilteredEntries } from '../core/entryFilters.js';
 import { getStats } from '../core/calc.js';
-import { getState, setSelectedStat } from '../state/scorecardState.js';
+import { setSelectedStat, getCurrentEntries } from '../state/scorecardState.js';
 import { profileStatDefs, scorecardStatDefs } from '../core/statDefs.js';
 import { setSort } from './listView.js';
 import { getApiData } from '../state/apiData.js';
@@ -17,7 +16,7 @@ function updateStatPills() {
   });
 
   // Aggregates
-  var stats = getStats(getFilteredEntries(getState()));
+  var stats = getStats(getCurrentEntries());
   Object.entries(scorecardStatDefs).forEach(function([stat, fn]) {
     var pill = document.querySelector('[data-stat="' + stat + '"] .pill-value');
     if (pill) pill.textContent = fn(stats);

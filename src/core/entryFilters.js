@@ -1,8 +1,6 @@
 import { ClassIdsByDrivetrain, LocIdsBySurface } from './luts.js';
-import { getApiData } from '../state/apiData.js';
 
-function getFilteredEntries(filters) {
-  var entries = getApiData()?.entries;
+function getFilteredEntries(entries, filters) {
   if (!entries) return [];
 
   return entries.filter(function(e) {

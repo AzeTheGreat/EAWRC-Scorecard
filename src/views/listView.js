@@ -1,8 +1,7 @@
 import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from '../core/luts.js';
-import { getFilteredEntries } from '../core/entryFilters.js';
 import { getStats } from '../core/calc.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
-import { getState } from '../state/scorecardState.js';
+import { getCurrentEntries } from '../state/scorecardState.js';
 import { getElem } from '../lib/dom.js';
 
 var sortState = { column: "percentile", isAscending: true };
@@ -43,7 +42,7 @@ function renderListView() {
   var tbody = document.querySelector("#entries-table tbody");
   tbody.innerHTML = "";
 
-  var withStats = getFilteredEntries(getState()).map(e => ({ entry: e, stats: getStats([e]) }));
+  var withStats = getCurrentEntries().map(e => ({ entry: e, stats: getStats([e]) }));
   withStats.sort((a, b) => {
     var cmp = (a.stats[sortState.column]) - (b.stats[sortState.column]);
     return sortState.isAscending ? cmp : -cmp;

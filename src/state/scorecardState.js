@@ -1,5 +1,7 @@
 import { render } from "../app.js"
 import { renderMatrixView } from '../views/matrixView.js';
+import { getApiData } from './apiData.js';
+import { getFilteredEntries } from '../core/entryFilters.js';
 
 let state = {};
 export const getState = () => ({...state});
@@ -13,4 +15,8 @@ export const getSelectedStat = () => selectedStat;
 export function setSelectedStat(stat) {
   selectedStat = stat;
   renderMatrixView();
+}
+
+export function getCurrentEntries() {
+  return getFilteredEntries(getApiData()?.entries, getState());
 }

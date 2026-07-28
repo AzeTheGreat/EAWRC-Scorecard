@@ -3,6 +3,7 @@ import { getFilteredEntries } from '../core/entryFilters.js';
 import { getStats } from '../core/calc.js';
 import { getElem, getChunk, getCollapseArrow } from '../lib/dom.js';
 import { getState, setState, getSelectedStat } from '../state/scorecardState.js';
+import { getApiData } from '../state/apiData.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
 
 // Table Config
@@ -69,7 +70,7 @@ function buildChunk(xEntry, yEntry) {
     if (xe) filters[xe.lvl.levelID] = xe.id;
     if (ye) filters[ye.lvl.levelID] = ye.id;
 
-    const entries = getFilteredEntries(filters);
+    const entries = getFilteredEntries(getApiData()?.entries, filters);
     return entries.length ? scorecardStatDefs[getSelectedStat()](getStats(entries)) : "";
   } 
 
