@@ -20,7 +20,7 @@ function pushUsernameToURL(username) {
   history.pushState(null, "", url.toString());
 }
 
-window.fetchProfile = function (username, skipPush) {
+function fetchProfile(username, skipPush) {
   fetch("https://fourleft.io/api_v2/time-trials/player?name=" + encodeURIComponent(username))
     .then(res => {
       if (!res.ok) throw new Error("API request failed: " + res.status);
@@ -36,18 +36,18 @@ window.fetchProfile = function (username, skipPush) {
 
 window.addEventListener("popstate", function () {
   var username = getUsernameFromURL();
-  if (username) window.fetchProfile(username, true);
+  if (username) fetchProfile(username, true);
   else render();
 });
 
 var initialUser = getUsernameFromURL();
-if (initialUser) window.fetchProfile(initialUser, true);
+if (initialUser) fetchProfile(initialUser, true);
 else render();
 
 document.getElementById("profile-name").addEventListener("keydown", function (e) {
   if (e.key === "Enter") {
     var name = e.target.value.trim();
-    if (name) window.fetchProfile(name);
+    if (name) fetchProfile(name);
   }
 });
 
