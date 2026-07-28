@@ -1,5 +1,5 @@
-import { render } from "./app.js"
-import { buildTable } from './table.js';
+import { render } from "../app.js"
+import { buildTable } from '../views/table.js';
 
 let state = {};
 export const getState = () => ({...state});

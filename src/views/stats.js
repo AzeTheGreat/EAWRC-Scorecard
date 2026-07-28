@@ -1,8 +1,8 @@
-import { getFilteredEntries, getStat } from './calc.js';
-import { getState, setSelectedStat } from './scorecardState.js';
-import { profileStatDefs, scorecardStatDefs } from './statDefs.js';
+import { getFilteredEntries, getStat } from '../core/calc.js';
+import { getState, setSelectedStat } from '../state/scorecardState.js';
+import { profileStatDefs, scorecardStatDefs } from '../core/statDefs.js';
 import { setSort } from './entries.js';
-import { getApiData } from './apiData.js';
+import { getApiData } from '../state/apiData.js';
 
 registerStatPillClicks();
 document.querySelector('[data-stat="percentile"]').classList.add("active");

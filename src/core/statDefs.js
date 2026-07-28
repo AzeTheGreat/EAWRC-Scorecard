@@ -1,4 +1,4 @@
-import { formatTime } from './util.js';
+import { formatTime } from '../lib/util.js';
 
 export const profileStatDefs = {
   sp: s => Math.round(s.sp),

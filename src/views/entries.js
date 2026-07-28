@@ -1,8 +1,8 @@
-import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from './luts.js';
-import { getFilteredEntries, getStat } from './calc.js';
-import { scorecardStatDefs } from './statDefs.js';
-import { getState } from './scorecardState.js';
-import { getElem } from './dom.js';
+import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from '../core/luts.js';
+import { getFilteredEntries, getStat } from '../core/calc.js';
+import { scorecardStatDefs } from '../core/statDefs.js';
+import { getState } from '../state/scorecardState.js';
+import { getElem } from '../lib/dom.js';
 
 var entriesSort = { column: "percentile", isAscending: true };
 

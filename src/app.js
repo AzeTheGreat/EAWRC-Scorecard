@@ -1,7 +1,7 @@
-import { buildTable } from './table.js';
-import { updateStatPills } from './stats.js';
-import { renderEntriesView } from './entries.js';
-import { setApiData } from './apiData.js';
+import { buildTable } from './views/table.js';
+import { updateStatPills } from './views/stats.js';
+import { renderEntriesView } from './views/entries.js';
+import { setApiData } from './state/apiData.js';
 
 function render() {
   buildTable();

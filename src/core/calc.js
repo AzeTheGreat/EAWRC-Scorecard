@@ -1,5 +1,5 @@
 import { ClassIdsByDrivetrain, LocIdsBySurface } from './luts.js';
-import { getApiData } from './apiData.js';
+import { getApiData } from '../state/apiData.js';
 
 function avg(arr) {
   return arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : null;

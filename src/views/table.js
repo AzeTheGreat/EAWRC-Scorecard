@@ -1,8 +1,8 @@
-import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLocID, LocToStageIds, StageNameByStageId } from './luts.js';
-import { getFilteredEntries, getStat } from './calc.js';
-import { getElem, getChunk, getCollapseArrow } from './dom.js';
-import { getState, setState, getSelectedStat } from './scorecardState.js';
-import { scorecardStatDefs } from './statDefs.js';
+import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLocID, LocToStageIds, StageNameByStageId } from '../core/luts.js';
+import { getFilteredEntries, getStat } from '../core/calc.js';
+import { getElem, getChunk, getCollapseArrow } from '../lib/dom.js';
+import { getState, setState, getSelectedStat } from '../state/scorecardState.js';
+import { scorecardStatDefs } from '../core/statDefs.js';
 
 // Table Config
 const CONFIG = {
