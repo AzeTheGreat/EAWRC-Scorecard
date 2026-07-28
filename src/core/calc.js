@@ -1,17 +1,4 @@
-import { ClassIdsByDrivetrain, LocIdsBySurface } from './luts.js';
-import { getApiData } from '../state/apiData.js';
-
-function avg(arr) {
-  return arr.length ? arr.reduce((s, v) => s + v, 0) / arr.length : null;
-}
-
-function parseTime(timeStr) {
-  if (!timeStr) return null;
-  var parts = timeStr.split(":");
-  if (parts.length === 3) return parseFloat(parts[0]) * 3600 + parseFloat(parts[1]) * 60 + parseFloat(parts[2]);
-  if (parts.length === 2) return parseFloat(parts[0]) * 60 + parseFloat(parts[1]);
-  return parseFloat(parts[0]);
-}
+import { avg, parseTime } from '../lib/util.js';
 
 function computePoints(entries) {
   const scores = entries.map(e => 1 / (e.rank / e.totalEntries));
@@ -21,21 +8,6 @@ function computePoints(entries) {
     totalPoints: scores.reduce((s, v) => s + v, 0),
     skillPoints: scores.slice(0, 100).reduce((sum, score, i) => sum + score * Math.pow(0.95, i), 0)
   };
-}
-
-function getFilteredEntries(filters) {
-  var entries = getApiData()?.entries;
-  if (!entries) return [];
-
-  return entries.filter(function(e) {
-    return (
-      (!filters.class || e.vehicleClassId === filters.class) &&
-      (!filters.drivetrain || (ClassIdsByDrivetrain[filters.drivetrain] || []).includes(e.vehicleClassId)) &&
-      (!filters.location || e.locationId === filters.location) &&
-      (!filters.surface || (LocIdsBySurface[filters.surface] || []).includes(e.locationId)) &&
-      (!filters.stage || e.routeId === filters.stage)
-    );
-  });
 }
 
 function getStat(entries) {
@@ -63,4 +35,4 @@ function getStat(entries) {
   return s;
 }
 
-export { getFilteredEntries, getStat };
+export { getStat };

@@ -1,5 +1,6 @@
 import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from '../core/luts.js';
-import { getFilteredEntries, getStat } from '../core/calc.js';
+import { getFilteredEntries } from '../core/entryFilters.js';
+import { getStat } from '../core/calc.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
 import { getState } from '../state/scorecardState.js';
 import { getElem } from '../lib/dom.js';

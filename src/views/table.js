@@ -1,5 +1,6 @@
 import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLocID, LocToStageIds, StageNameByStageId } from '../core/luts.js';
-import { getFilteredEntries, getStat } from '../core/calc.js';
+import { getFilteredEntries } from '../core/entryFilters.js';
+import { getStat } from '../core/calc.js';
 import { getElem, getChunk, getCollapseArrow } from '../lib/dom.js';
 import { getState, setState, getSelectedStat } from '../state/scorecardState.js';
 import { scorecardStatDefs } from '../core/statDefs.js';

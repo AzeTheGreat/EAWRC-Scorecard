@@ -1,4 +1,5 @@
-import { getFilteredEntries, getStat } from '../core/calc.js';
+import { getFilteredEntries } from '../core/entryFilters.js';
+import { getStat } from '../core/calc.js';
 import { getState, setSelectedStat } from '../state/scorecardState.js';
 import { profileStatDefs, scorecardStatDefs } from '../core/statDefs.js';
 import { setSort } from './entries.js';
