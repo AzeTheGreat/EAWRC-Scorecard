@@ -9,7 +9,7 @@ function getFilteredEntries(entries, filters) {
       (!filters.drivetrain || getClassIds(filters.drivetrain).includes(e.vehicleClassId)) &&
       (!filters.location || e.locationId === filters.location) &&
       (!filters.surface || getLocationIds(filters.surface).includes(e.locationId)) &&
-      (!filters.stage || e.locationId + "-" + e.routeId === filters.stage)
+      (!filters.stage || e.routeId === Number(filters.stage))
     );
   });
 }

@@ -53,7 +53,7 @@ function renderListView() {
     var s = es.stats;
     var tr = document.createElement("tr");
 
-    var stageName = getStageName(e.locationId + "-" + e.routeId) || e.routeId;
+    var stageName = getStageName(e.routeId) || e.routeId;
     var locationName = getLocationName(e.locationId) || "";
     var className = getClassName(e.vehicleClassId) || "";
     var weather = e.surfaceCondition == 1 ? "Wet" : "Dry";
