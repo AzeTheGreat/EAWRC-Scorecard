@@ -1,4 +1,4 @@
-import { StageNameByStageId, LocNameByLocID, ClassNameByClassId } from '../core/luts.js';
+import { getStageName, getLocationName, getClassName } from '../core/luts.js';
 import { getStats } from '../core/calc.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
 import { getCurrentEntries } from '../state/scorecardState.js';
@@ -53,9 +53,9 @@ function renderListView() {
     var s = es.stats;
     var tr = document.createElement("tr");
 
-    var stageName = StageNameByStageId[e.routeId] || e.routeId;
-    var locationName = LocNameByLocID[e.locationId] || "";
-    var className = ClassNameByClassId[e.vehicleClassId] || "";
+    var stageName = getStageName(e.locationId + "-" + e.routeId) || e.routeId;
+    var locationName = getLocationName(e.locationId) || "";
+    var className = getClassName(e.vehicleClassId) || "";
     var weather = e.surfaceCondition == 1 ? "Wet" : "Dry";
     var stageTd = getElem("td");
     stageTd.innerHTML =

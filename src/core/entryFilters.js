@@ -1,4 +1,4 @@
-import { ClassIdsByDrivetrain, LocIdsBySurface } from './luts.js';
+import { getClassIds, getLocationIds } from './luts.js';
 
 function getFilteredEntries(entries, filters) {
   if (!entries) return [];
@@ -6,10 +6,10 @@ function getFilteredEntries(entries, filters) {
   return entries.filter(function(e) {
     return (
       (!filters.class || e.vehicleClassId === filters.class) &&
-      (!filters.drivetrain || (ClassIdsByDrivetrain[filters.drivetrain] || []).includes(e.vehicleClassId)) &&
+      (!filters.drivetrain || getClassIds(filters.drivetrain).includes(e.vehicleClassId)) &&
       (!filters.location || e.locationId === filters.location) &&
-      (!filters.surface || (LocIdsBySurface[filters.surface] || []).includes(e.locationId)) &&
-      (!filters.stage || e.routeId === filters.stage)
+      (!filters.surface || getLocationIds(filters.surface).includes(e.locationId)) &&
+      (!filters.stage || e.locationId + "-" + e.routeId === filters.stage)
     );
   });
 }

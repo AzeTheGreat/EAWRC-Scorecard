@@ -1,4 +1,4 @@
-import { ClassIdsByDrivetrain, ClassNameByClassId, LocIdsBySurface, LocNameByLocID, LocToStageIds, StageNameByStageId } from '../core/luts.js';
+import { getDrivetrainIds, getClassIds, getClassName, getSurfaceIds, getLocationIds, getStageIds, getLocationName, getStageName } from '../core/luts.js';
 import { getFilteredEntries } from '../core/entryFilters.js';
 import { getStats } from '../core/calc.js';
 import { getElem, getChunk, getCollapseArrow } from '../lib/dom.js';
@@ -10,26 +10,26 @@ import { scorecardStatDefs } from '../core/statDefs.js';
 const CONFIG = {
   xAxis: {
     levelID: "drivetrain",
-    getRootIds: () => Object.keys(ClassIdsByDrivetrain),
-    getChildIds: id => ClassIdsByDrivetrain[id],
+    getRootIds: () => getDrivetrainIds(),
+    getChildIds: id => getClassIds(id),
     label: id => id,
     childLevel: {
       levelID: "class",
-      label: id => ClassNameByClassId[id],
+      label: id => getClassName(id),
     },
   },
   yAxis: {
     levelID: "surface",
-    getRootIds: () => Object.keys(LocIdsBySurface),
-    getChildIds: id => LocIdsBySurface[id],
+    getRootIds: () => getSurfaceIds(),
+    getChildIds: id => getLocationIds(id),
     label: id => id,
     childLevel: {
       levelID: "location",
-      getChildIds: id => LocToStageIds[id],
-      label: id => LocNameByLocID[id],
+      getChildIds: id => getStageIds(id),
+      label: id => getLocationName(id),
       childLevel: {
         levelID: "stage",
-        label: id => StageNameByStageId[id],
+        label: id => getStageName(id),
       },
     },
   },
