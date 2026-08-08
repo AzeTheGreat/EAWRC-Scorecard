@@ -4,6 +4,7 @@
   --header-bg: #1a2332;
   --background: #0a0e1a;
   --text: #c0c8d0;
+  --text-header: #ffffff;
   --muted: #5a6a7a;
   --hover: #19233a;
 }
@@ -41,13 +42,17 @@ html, body {
   gap: 12px;
 }
 
+#totals .pill-row {
+  justify-content: space-between;
+}
+
 .stat-pill {
   display: flex;
-  align-items: center;
-  background: var(--header-bg);
+  align-items: stretch;
+  background: transparent;
   border-radius: 20px;
-  padding: 6px 14px;
-  gap: 8px;
+  outline: 1px solid var(--header-bg);
+  overflow: hidden;
   flex-shrink: 0;
 }
 
@@ -55,20 +60,29 @@ html, body {
   cursor: pointer;
 }
 
-.stat-pill.active {
-  background: var(--content-bg);
-  box-shadow: inset 0 0 0 2px var(--accent);
+.stat-pill.active .pill-label {
+  text-decoration: underline;
+  text-decoration-color: var(--accent);
+  text-decoration-thickness: 2px;
 }
 
 .pill-label {
+  display: flex;
+  align-items: center;
+  background: var(--header-bg);
+  color: var(--text-header);
   font-weight: 600;
-  font-size: 0.85rem;
-  color: var(--muted);
+  font-size: 1rem;
+  padding: 6px 14px;
 }
 
 .pill-value {
-  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  background: var(--content-bg);
   color: var(--text);
+  font-size: 1rem;
+  padding: 6px 14px;
   min-width: 20px;
 }
 
