@@ -167,6 +167,7 @@ html, body {
 .chunk {
   background: var(--content-bg);
   border-radius: 8px;
+  overflow: hidden;
 }
 
 .chunk.yhead {
@@ -202,6 +203,12 @@ th {
   user-select: none;
 }
 
+.chunk.xhead th,
+.chunk.yhead th {
+  background: var(--header-bg);
+  color: var(--text-header);
+}
+
 #entries-table thead th {
   position: sticky;
   top: 0;
@@ -227,11 +234,16 @@ th {
 }
 
 .yhead td,
-.yhead th,
-.entriesHead {
+.yhead th {
   text-align: left;
   width: max-content;
   padding: 0 8px;
+}
+
+#entries-view th {
+  text-align: left;
+  background: var(--header-bg);
+  color: var(--text-header);
 }
 
 
