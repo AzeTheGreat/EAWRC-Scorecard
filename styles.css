@@ -152,6 +152,7 @@ html, body {
 
 .table-wrapper {
   overflow-x: auto;
+  overflow-y: clip;
   padding-bottom: 6px;
   scrollbar-width: thin;
   scrollbar-color: var(--header-bg) transparent;
@@ -168,6 +169,25 @@ html, body {
   border-radius: 8px;
 }
 
+.chunk.yhead {
+  position: sticky;
+  left: 0;
+  z-index: 3;
+}
+
+.chunk.xhead {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+}
+
+.chunk.corner {
+  position: sticky;
+  top: 0;
+  left: 0;
+  z-index: 5;
+}
+
 table {
   border-collapse: collapse;
   width: 100%;
@@ -180,6 +200,12 @@ th {
   text-align: center;
   vertical-align: middle;
   user-select: none;
+}
+
+#entries-table thead th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
 }
 
 .cell:hover {
