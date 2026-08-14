@@ -31,10 +31,23 @@ html, body {
   gap: 0;
 }
 
+@media (max-width: 40em) {
+  .container {
+    max-width: none;
+    padding: 0;
+  }
+}
+
 .card-header {
   background: var(--content-bg);
   border-radius: 8px 8px 0 0;
   padding: 20px;
+}
+
+@media (max-width: 40em) {
+  .card-header {
+    border-radius: 0;
+  }
 }
 
 .card-body {
@@ -44,6 +57,13 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+}
+
+@media (max-width: 40em) {
+  .card-body {
+    border-radius: 0;
+    padding: 20px 4px 20px;
+  }
 }
 
 .matrix {
