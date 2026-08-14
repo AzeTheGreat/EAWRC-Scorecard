@@ -1,8 +1,9 @@
 :root {
   --accent: #fc4c02;
   --content-bg: #161927;
+  --card-bg: #0a0e1a;
   --header-bg: #1a2332;
-  --background: #0a0e1a;
+  --background: #05070f;
   --text: #c0c8d0;
   --text-header: #ffffff;
   --muted: #5a6a7a;
@@ -27,7 +28,28 @@ html, body {
   padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 0;
+}
+
+.card-header {
+  background: var(--content-bg);
+  border-radius: 8px 8px 0 0;
+  padding: 20px;
+}
+
+.card-body {
+  background: var(--card-bg);
+  border-radius: 0 0 8px 8px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.matrix {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .section {
