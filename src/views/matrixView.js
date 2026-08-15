@@ -45,6 +45,11 @@ function renderMatrixView() {
   const xLists = buildLists(CONFIG.xAxis);
   const yLists = buildLists(CONFIG.yAxis);
 
+  grid.style.gridTemplateColumns =
+    [1, ...xLists.map(x => getChildren(x).length)]
+      .map(n => `${n}fr`)
+      .join(" ");
+
   const xEntries = [null, ...xLists];
   const yEntries = [null, ...yLists];
 

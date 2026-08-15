@@ -23,7 +23,8 @@ html, body {
 }
 
 .container {
-  max-width: min-content;
+  width: 100%;
+  max-width: 90rem;
   margin: 0 auto;
   padding: 20px;
   display: flex;
@@ -202,7 +203,7 @@ html, body {
 
 .score-table-grid {
   display: grid;
-  min-width: max-content;
+  grid-template-columns: minmax(auto, 1fr);
   gap: 6px;
 }
 
@@ -210,6 +211,7 @@ html, body {
   background: var(--content-bg);
   border-radius: 8px;
   overflow: hidden;
+  min-width: min-content;
 }
 
 .chunk.yhead {
@@ -270,7 +272,7 @@ th {
 }
 
 .chunk td {
-  width: 3.5rem;
+  min-width: 3.5rem;
   height: 1.75rem;
   font-size: 1rem;
   text-align: center;
@@ -286,7 +288,10 @@ th {
 .yhead td,
 .yhead th {
   text-align: left;
-  width: max-content;
+  min-width: 7rem;
+  max-width: 10rem;
+  white-space: nowrap;
+  overflow: hidden;
   padding: 0 8px;
 }
 
