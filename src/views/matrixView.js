@@ -99,23 +99,47 @@ function buildChunk(xEntry, yEntry) {
 
 function buildCell(xEntry, yEntry, valueFn, isHeader) {
   const state = getState();
-  const hasClick = xEntry && yEntry
-    ? state[xEntry.lvl.levelID] !== xEntry.id || state[yEntry.lvl.levelID] !== yEntry.id
-    : xEntry || yEntry || Object.values(state).some(v => v != null);
-  const el = getElem(isHeader ? "th" : "td", hasClick ? "cell" : null, valueFn(xEntry, yEntry));
-  if (hasClick) {
-    el.style.cursor = "pointer";
-    el.addEventListener("click", () => pinAndRerender(state, xEntry, yEntry));
-  }
+  const { className, action } = getClickActionAndClass(xEntry, yEntry, state);
+  const el = getElem(isHeader ? "th" : "td", className, valueFn(xEntry, yEntry));
+  if (action) el.addEventListener("click", action);
   return el;
 }
 
-function pinAndRerender(state, xEntry, yEntry) {
-  const togglePin = (def, id) => state[def.levelID] = state[def.levelID] === id ? null : id;
-  if (xEntry) togglePin(xEntry.lvl, xEntry.id);
-  if (yEntry) togglePin(yEntry.lvl, yEntry.id);
-  if (!xEntry && !yEntry) Object.keys(state).forEach(k => state[k] = null);
-  setState(state);
+function getClickActionAndClass(xEntry, yEntry, state) {
+  const noOp = { className: null, action: null };
+  const applyAndSet = (mutate) => () => { mutate(); setState(state); };
+
+  // Corner cell: clear everything, but only if something is actually filtered
+  if (!xEntry && !yEntry) {
+    const hasFilters = Object.values(state).some(v => v != null);
+    if (!hasFilters) return noOp;
+    return {
+      className: "to-root",
+      action: applyAndSet(() => Object.keys(state).forEach(k => (state[k] = null))),
+    };
+  }
+
+  // Data cell: drill into both axes, unless we're already there
+  if (xEntry && yEntry) {
+    const alreadyThere =
+      state[xEntry.lvl.levelID] === xEntry.id && state[yEntry.lvl.levelID] === yEntry.id;
+    if (alreadyThere) return noOp;
+    return {
+      className: "cell",
+      action: applyAndSet(() => {
+        state[xEntry.lvl.levelID] = xEntry.id;
+        state[yEntry.lvl.levelID] = yEntry.id;
+      }),
+    };
+  }
+
+  // Header cell: toggle drill for a single level
+  const { lvl: { levelID }, id } = xEntry || yEntry;
+  const isPinned = state[levelID] === id;
+  return {
+    className: isPinned ? "drill-up" : "cell",
+    action: applyAndSet(() => { state[levelID] = isPinned ? null : id; }),
+  };
 }
 
 function buildLists(root) {

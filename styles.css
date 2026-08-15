@@ -257,7 +257,15 @@ th {
   z-index: 2;
 }
 
-.cell:hover {
+.cell,
+.drill-up,
+.to-root {
+  cursor: pointer;
+}
+
+.cell:hover,
+.drill-up:hover,
+.to-root:hover {
   background: var(--hover);
 }
 
