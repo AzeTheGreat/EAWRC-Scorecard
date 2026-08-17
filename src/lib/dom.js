@@ -30,11 +30,11 @@ export function getChunk(className, groupCell, cells) {
   return chunk;
 }
 
-export function getCollapseArrow(isCollapsed, onToggle) {
-  const arrow = getElem("span", "collapse-arrow", isCollapsed ? "\u25B6 " : "\u25BC ");
-  arrow.addEventListener("click", e => {
+export function getAxisToggleButton(axis, isCollapsed, onToggle) {
+  const btn = getElem("span", `axis-toggle axis-toggle--${axis}`, isCollapsed ? "\u276F" : "\u276E");
+  btn.addEventListener("click", e => {
     e.stopPropagation();
     onToggle();
   });
-  return arrow;
+  return btn;
 }
