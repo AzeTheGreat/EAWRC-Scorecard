@@ -1,7 +1,7 @@
 import { getDrivetrainIds, getClassIds, getClassName, getSurfaceIds, getLocationIds, getStageIds, getLocationName, getStageName } from '../core/luts.js';
 import { getFilteredEntries } from '../core/entryFilters.js';
 import { getStats } from '../core/calc.js';
-import { getElem, getChunk, getAxisToggleButton } from '../lib/dom.js';
+import { getElem, getChunk, getAxisToggleButton, getCellLayout } from '../lib/dom.js';
 import { getState, setState, getSelectedStat } from '../state/scorecardState.js';
 import { getApiData } from '../state/apiData.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
@@ -92,7 +92,6 @@ function renderMatrixView() {
 }
 
 function buildChunk(xEntry, yEntry) {
-  const getHeaderStr = (xe, ye) => xe?.lvl.label(xe.id) ?? ye?.lvl.label(ye.id) ?? "";
   const getValStr = (xe, ye) => {
     // buildCell is called with only child entries, which can be null when drilled-down.
     // Thus, filters need to include current drill-down state.
@@ -101,43 +100,57 @@ function buildChunk(xEntry, yEntry) {
     if (ye) filters[ye.lvl.levelID] = ye.id;
 
     const entries = getFilteredEntries(getApiData()?.entries, filters);
-    return entries.length ? scorecardStatDefs[getSelectedStat()](getStats(entries)) : "";
+    const value = entries.length ? scorecardStatDefs[getSelectedStat()](getStats(entries)) : "";
+    return getElem("span", "cell-label", value);
   } 
+
+  const getHeaderLayout = (xe, ye, className) => {
+    const entry = xe ?? ye;
+    if (!entry) return buildCornerControls(className === "to-root");
+    const label = getElem("span", "cell-label", entry.lvl.label(entry.id));
+    const arrow = className === "drill-up" ? buildDrillArrow(xe ? "up" : "left") : null;
+    return getCellLayout(xe ? null : label, xe ? label : null, arrow);
+  };
 
   const isData = xEntry && yEntry;
   const className = isData ? "data" : xEntry ? "xhead" : yEntry ? "yhead" : "corner";
-  const valueFn = isData ? getValStr : getHeaderStr;
+  const valueFn = isData ? getValStr : getHeaderLayout;
 
   const groupCell = buildCell(xEntry, yEntry, valueFn, true);
-  if (!xEntry && !yEntry) {
-    groupCell.appendChild(buildCornerControls());
-  }
 
   const cells = getChildren(yEntry).map(y => getChildren(xEntry).map(x => buildCell(x, y, valueFn)));
 
   return getChunk(className, groupCell, cells);
 }
 
-function buildCornerControls() {
+function buildCornerControls(isToRoot) {
   const toggleAxisCollapse = (axis) => { collapseOverride[axis] = !isAxisCollapsed(axis); renderMatrixView(); }
   
   const buildAxisToggleSlot = (axis, axisDef) => !!findDeepestPinnedLevel(axisDef, getState()).childLevel ? 
     getAxisToggleButton(axis, isAxisCollapsed(axis), () => toggleAxisCollapse(axis)) : 
     getElem("div");
   
-  const wrap = getElem("div", "corner-controls");
-  wrap.appendChild(buildAxisToggleSlot("y", CONFIG.yAxis));
-  wrap.appendChild(getElem("div", "corner-controls-center"));
-  wrap.appendChild(buildAxisToggleSlot("x", CONFIG.xAxis));
-  return wrap;
+  const center = getElem("div", "corner-controls-center");
+  if (isToRoot) center.appendChild(buildDrillArrow("corner"));
+  return getCellLayout(
+    buildAxisToggleSlot("y", CONFIG.yAxis),
+    center,
+    buildAxisToggleSlot("x", CONFIG.xAxis),
+  );
 }
 
 function buildCell(xEntry, yEntry, valueFn, isHeader) {
   const state = getState();
   const { className, action } = getClickActionAndClass(xEntry, yEntry, state);
-  const el = getElem(isHeader ? "th" : "td", className, valueFn(xEntry, yEntry));
+  const el = getElem(isHeader ? "th" : "td", className);
+  el.appendChild(valueFn(xEntry, yEntry, className));
   if (action) el.addEventListener("click", action);
   return el;
+}
+
+function buildDrillArrow(variant) {
+  const glyph = variant === "corner" ? "\u279C\n\u279C" : "\u279C";
+  return getElem("span", `drill-arrow drill-arrow--${variant}`, glyph);
 }
 
 function getClickActionAndClass(xEntry, yEntry, state) {

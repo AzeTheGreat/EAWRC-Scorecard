@@ -38,3 +38,13 @@ export function getAxisToggleButton(axis, isCollapsed, onToggle) {
   });
   return btn;
 }
+
+export function getCellLayout(...columns) {
+  const layout = getElem("div", "cell-layout");
+  columns.forEach((el, i) => {
+    if (!el) return;
+    el.style.gridColumn = i + 1;
+    layout.appendChild(el);
+  });
+  return layout;
+}

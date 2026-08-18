@@ -233,16 +233,27 @@ html, body {
   z-index: 5;
 }
 
-.corner-controls {
+.corner-controls-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-width: 0;
+}
+
+.cell-layout {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  width: 100%;
   height: 100%;
+  min-width: 0;
 }
 
-.corner-controls-center {
-  min-width: 0;
+.chunk.xhead .cell-label {
+  justify-self: center;
+}
+
+.chunk.yhead .cell-label {
+  justify-self: start;
 }
 
 .axis-toggle {
@@ -262,12 +273,7 @@ html, body {
   color: var(--accent);
 }
 
-.axis-toggle--y {
-  justify-self: start;
-}
-
 .axis-toggle--x {
-  justify-self: end;
   transform: rotate(90deg);
 }
 
@@ -307,6 +313,31 @@ th {
 .drill-up:hover,
 .to-root:hover {
   background: var(--hover);
+}
+
+.drill-arrow {
+  color: var(--muted);
+  font-size: 0.85em;
+  pointer-events: none;
+}
+
+.drill-arrow--up {
+  transform: rotate(-90deg);
+}
+
+.drill-arrow--left {
+  transform: rotate(180deg);
+}
+
+.drill-arrow--corner {
+  transform: rotate(-135deg);
+  white-space: pre-line;
+  line-height: .75;
+}
+
+.drill-up:hover .drill-arrow,
+.to-root:hover .drill-arrow {
+  color: var(--text-header);
 }
 
 .chunk td {
