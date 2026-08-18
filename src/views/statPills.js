@@ -28,7 +28,10 @@ function updateStatPills() {
 function registerStatPillClicks() {
   Object.keys(scorecardStatDefs).forEach(function(stat) {
     var el = document.querySelector('[data-stat="' + stat + '"]');
-    if (el) el.addEventListener("click", () => selectStat(el, stat));
+    if (el) {
+      el.classList.add("clickable");
+      el.addEventListener("click", () => selectStat(el, stat));
+    }
   });
 }
 

@@ -8,26 +8,23 @@
 </head>
 <body>
   <div class="container">
-    <section class="card-header">
-      <div class="pill-row">
-        <div class="profile-input">
-          <input type="text" id="profile-name" placeholder="Enter name...">
-        </div>
-        <div class="stat-pill" data-stat="sp">
-          <span class="pill-label">SP</span>
-          <span class="pill-value"></span>
-        </div>
-        <div class="stat-pill" data-stat="tp">
-          <span class="pill-label">TP</span>
-          <span class="pill-value"></span>
-        </div>
+    <div class="card-header flexwrap">
+      <div class="profile-input">
+        <input type="text" id="profile-name" placeholder="Enter name...">
       </div>
-    </section>
+      <div class="stat-pill" data-stat="sp">
+        <span class="pill-label">SP</span>
+        <span class="pill-value"></span>
+      </div>
+      <div class="stat-pill" data-stat="tp">
+        <span class="pill-label">TP</span>
+        <span class="pill-value"></span>
+      </div>
+    </div>
 
     <div class="card-body">
       <div class="matrix">
-        <section id="totals" class="section">
-          <div class="pill-row">
+        <div class="panel flexwrap">
             <div class="stat-pill" data-stat="percentile">
               <span class="pill-label">Percentile</span>
               <span class="pill-value"></span>
@@ -42,7 +39,7 @@
             </div>
             <div class="stat-pill" data-stat="medals">
               <span class="pill-label">Medals</span>
-              <span class="pill-value medal-icons">
+              <span class="pill-value">
                 <span class="medal-icon" data-stat="medal1">
                   <span class="medal-dot platinum"></span>
                   <span class="medal-count">0</span>
@@ -61,18 +58,15 @@
                 </span>
               </span>
             </div>
-          </div>
-        </section>
+        </div>
 
         <div class="table-wrapper"></div>
       </div>
 
-      <section id="entries-view" class="section">
-        <table id="entries-table" class="table">
+      <table class="entries-table panel">
           <thead></thead>
           <tbody></tbody>
         </table>
-      </section>
     </div>
   </div>
   <script type="module" src="src/app.js"></script>

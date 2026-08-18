@@ -5,8 +5,8 @@ export function getElem(tag, className, text) {
   return elem;
 }
 
-export function getChunk(className, groupCell, cells) {
-  const chunk = getElem("div", "chunk " + className);
+export function getPanel(className, groupCell, cells) {
+  const panel = getElem("div", "panel " + className);
   const table = getElem("table");
   const thead = getElem("thead");
   const headerRow = getElem("tr");
@@ -26,8 +26,8 @@ export function getChunk(className, groupCell, cells) {
     table.appendChild(tbody);
   }
 
-  chunk.appendChild(table);
-  return chunk;
+  panel.appendChild(table);
+  return panel;
 }
 
 export function getAxisToggleButton(axis, isCollapsed, onToggle) {

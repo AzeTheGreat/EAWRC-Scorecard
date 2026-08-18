@@ -1,7 +1,7 @@
 import { getDrivetrainIds, getClassIds, getClassName, getSurfaceIds, getLocationIds, getStageIds, getLocationName, getStageName } from '../core/luts.js';
 import { getFilteredEntries } from '../core/entryFilters.js';
 import { getStats } from '../core/calc.js';
-import { getElem, getChunk, getAxisToggleButton, getCellLayout } from '../lib/dom.js';
+import { getElem, getPanel, getAxisToggleButton, getCellLayout } from '../lib/dom.js';
 import { getState, setState, getSelectedStat } from '../state/scorecardState.js';
 import { getApiData } from '../state/apiData.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
@@ -36,7 +36,7 @@ const CONFIG = {
 };
 
 // Main
-const grid = getElem("div", "score-table-grid");
+const grid = document.querySelector(".table-wrapper");
 
 const MOBILE_BREAKPOINT_QUERY = "(max-width: 40em)";
 let defaultsCollapsed;
@@ -80,18 +80,15 @@ function renderMatrixView() {
 
   xEntries.forEach((xGroupEntry, xi) => {
     yEntries.forEach((yGroupEntry, yi) => {
-      const chunk = buildChunk(xGroupEntry, yGroupEntry);
-      chunk.style.gridColumn = xi + 1;
-      chunk.style.gridRow = yi + 1;
-      grid.appendChild(chunk);
+      const panel = buildPanel(xGroupEntry, yGroupEntry);
+      panel.style.gridColumn = xi + 1;
+      panel.style.gridRow = yi + 1;
+      grid.appendChild(panel);
     });
   });
-
-  const wrapper = document.querySelector(".table-wrapper");
-  if (!grid.parentNode && wrapper) wrapper.appendChild(grid);
 }
 
-function buildChunk(xEntry, yEntry) {
+function buildPanel(xEntry, yEntry) {
   const getValStr = (xe, ye) => {
     // buildCell is called with only child entries, which can be null when drilled-down.
     // Thus, filters need to include current drill-down state.
@@ -106,9 +103,9 @@ function buildChunk(xEntry, yEntry) {
 
   const getHeaderLayout = (xe, ye, className) => {
     const entry = xe ?? ye;
-    if (!entry) return buildCornerControls(className === "to-root");
+    if (!entry) return buildCornerControls(className?.includes("to-root"));
     const label = getElem("span", "cell-label", entry.lvl.label(entry.id));
-    const arrow = className === "drill-up" ? buildDrillArrow(xe ? "up" : "left") : null;
+    const arrow = className?.includes("drill-up") ? buildDrillArrow(xe ? "up" : "left") : null;
     return getCellLayout(xe ? null : label, xe ? label : null, arrow);
   };
 
@@ -120,7 +117,7 @@ function buildChunk(xEntry, yEntry) {
 
   const cells = getChildren(yEntry).map(y => getChildren(xEntry).map(x => buildCell(x, y, valueFn)));
 
-  return getChunk(className, groupCell, cells);
+  return getPanel(className, groupCell, cells);
 }
 
 function buildCornerControls(isToRoot) {
@@ -149,8 +146,12 @@ function buildCell(xEntry, yEntry, valueFn, isHeader) {
 }
 
 function buildDrillArrow(variant) {
+  const drillRotations = { up: "-90deg", left: "180deg", corner: "-135deg" };
   const glyph = variant === "corner" ? "\u279C\n\u279C" : "\u279C";
-  return getElem("span", `drill-arrow drill-arrow--${variant}`, glyph);
+  
+  const el = getElem("span", "drill-arrow", glyph);
+  el.style.transform = "rotate(" + (drillRotations[variant] || "0deg") + ")";
+  return el;
 }
 
 function getClickActionAndClass(xEntry, yEntry, state) {
@@ -162,7 +163,7 @@ function getClickActionAndClass(xEntry, yEntry, state) {
     const hasFilters = Object.values(state).some(v => v != null);
     if (!hasFilters) return noOp;
     return {
-      className: "to-root",
+      className: "to-root clickable",
       action: applyAndSet(() => {
         Object.keys(state).forEach(k => (state[k] = null));
         resetCollapseDefaults();
@@ -176,7 +177,7 @@ function getClickActionAndClass(xEntry, yEntry, state) {
       state[xEntry.lvl.levelID] === xEntry.id && state[yEntry.lvl.levelID] === yEntry.id;
     if (alreadyThere) return noOp;
     return {
-      className: "cell",
+      className: "clickable",
       action: applyAndSet(() => {
         state[xEntry.lvl.levelID] = xEntry.id;
         state[yEntry.lvl.levelID] = yEntry.id;
@@ -188,7 +189,7 @@ function getClickActionAndClass(xEntry, yEntry, state) {
   const { lvl: { levelID }, id } = xEntry || yEntry;
   const isPinned = state[levelID] === id;
   return {
-    className: isPinned ? "drill-up" : "cell",
+    className: isPinned ? "drill-up clickable" : "clickable",
     action: applyAndSet(() => { state[levelID] = isPinned ? null : id; }),
   };
 }

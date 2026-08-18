@@ -17,7 +17,7 @@ function toggleSort(col) {
 }
 
 function rebuildHeader() {
-  var thead = document.querySelector("#entries-table thead");
+  var thead = document.querySelector(".entries-table thead");
   thead.innerHTML = "";
   var tr = document.createElement("tr");
   var cols = [
@@ -29,7 +29,7 @@ function rebuildHeader() {
   cols.forEach(function (c) {
     var label = c.label;
     if (c.col === sortState.column) label += " " + (sortState.isAscending ? "\u25B4" : "\u25BE");
-    var th = getElem("th", "entriesHead", label);
+    var th = getElem("th", null, label);
     if (c.col) th.addEventListener("click", toggleSort.bind(null, c.col));
     tr.appendChild(th);
   });
@@ -39,7 +39,7 @@ function rebuildHeader() {
 function renderListView() {
   rebuildHeader();
 
-  var tbody = document.querySelector("#entries-table tbody");
+  var tbody = document.querySelector(".entries-table tbody");
   tbody.innerHTML = "";
 
   var withStats = getCurrentEntries().map(e => ({ entry: e, stats: getStats([e]) }));
