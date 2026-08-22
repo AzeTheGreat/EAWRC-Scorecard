@@ -1,5 +1,5 @@
 import { getStats } from '../core/calc.js';
-import { setSelectedStat, getCurrentEntries } from '../state/scorecardState.js';
+import { setSelectedStat, getCurrentStats } from '../state/scorecardState.js';
 import { profileStatDefs, scorecardStatDefs } from '../core/statDefs.js';
 import { setSort } from './listView.js';
 import { getApiData } from '../state/apiData.js';
@@ -16,13 +16,20 @@ function updateStatPills() {
   });
 
   // Aggregates
-  var stats = getStats(getCurrentEntries());
+  var stats = getCurrentStats();
   Object.entries(scorecardStatDefs).forEach(function([stat, fn]) {
     var pill = document.querySelector('[data-stat="' + stat + '"] .pill-value');
     if (pill) pill.textContent = fn(stats);
     var medal = document.querySelector('[data-stat="medals"] [data-stat="' + stat + '"] .medal-count');
     if (medal) medal.textContent = fn(stats);
   });
+
+  // Totals bar completion fill
+  var totalsBar = document.querySelector(".totals-bar");
+  if (totalsBar) {
+    totalsBar.classList.add("has-completion");
+    totalsBar.style.setProperty("--completion", Math.min(stats.completion ?? 0, 1));
+  }
 }
 
 function registerStatPillClicks() {

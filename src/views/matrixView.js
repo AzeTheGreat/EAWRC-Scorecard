@@ -1,9 +1,6 @@
 import { getDrivetrainIds, getClassIds, getClassName, getSurfaceIds, getLocationIds, getStageIds, getLocationName, getStageName } from '../core/luts.js';
-import { getFilteredEntries } from '../core/entryFilters.js';
-import { getStats } from '../core/calc.js';
 import { getElem, getPanel, getAxisToggleButton, getCellLayout } from '../lib/dom.js';
-import { getState, setState, getSelectedStat } from '../state/scorecardState.js';
-import { getApiData } from '../state/apiData.js';
+import { getState, setState, getSelectedStat, getCurrentStats } from '../state/scorecardState.js';
 import { scorecardStatDefs } from '../core/statDefs.js';
 
 // Table Config
@@ -89,17 +86,21 @@ function renderMatrixView() {
 }
 
 function buildPanel(xEntry, yEntry) {
-  const getValStr = (xe, ye) => {
+  const getValLayout = (xe, ye) => {
     // buildCell is called with only child entries, which can be null when drilled-down.
     // Thus, filters need to include current drill-down state.
     var filters = { ...getState() };
     if (xe) filters[xe.lvl.levelID] = xe.id;
     if (ye) filters[ye.lvl.levelID] = ye.id;
 
-    const entries = getFilteredEntries(getApiData()?.entries, filters);
-    const value = entries.length ? scorecardStatDefs[getSelectedStat()](getStats(entries)) : "";
-    return getElem("span", "cell-label", value);
-  } 
+    const stats = getCurrentStats(filters);
+    const value = stats.percentile != null ? scorecardStatDefs[getSelectedStat()](stats) : "";
+
+    const layout = getElem("div", "val-layout has-completion");
+    layout.style.setProperty("--completion", Math.min(stats.completion ?? 0, 1));
+    layout.appendChild(getElem("span", "cell-label", value));
+    return layout;
+  }
 
   const getHeaderLayout = (xe, ye, className) => {
     const entry = xe ?? ye;
@@ -111,12 +112,10 @@ function buildPanel(xEntry, yEntry) {
 
   const isData = xEntry && yEntry;
   const className = isData ? "data" : xEntry ? "xhead" : yEntry ? "yhead" : "corner";
-  const valueFn = isData ? getValStr : getHeaderLayout;
+  const valueFn = isData ? getValLayout : getHeaderLayout;
 
   const groupCell = buildCell(xEntry, yEntry, valueFn, true);
-
   const cells = getChildren(yEntry).map(y => getChildren(xEntry).map(x => buildCell(x, y, valueFn)));
-
   return getPanel(className, groupCell, cells);
 }
 

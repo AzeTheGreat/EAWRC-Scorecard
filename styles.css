@@ -8,6 +8,7 @@
   --text-header: #ffffff;
   --muted: #5a6a7a;
   --hover: #19233a;
+  --completion-fill: #19233a;
 }
 
 * {
@@ -126,6 +127,14 @@ tr td {
     border-radius: 0;
     padding: 20px 4px 20px;
   }
+}
+
+/* COMPLETION FILL */
+
+.has-completion {
+  background-image: linear-gradient(90deg, var(--completion-fill), var(--completion-fill));
+  background-repeat: no-repeat;
+  background-size: calc(var(--completion, 0) * 100%) 100%;
 }
 
 /* STAT PILLS */
@@ -288,6 +297,14 @@ tr td {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
+  height: 100%;
+  min-width: 0;
+}
+
+.val-layout {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   height: 100%;
   min-width: 0;
 }

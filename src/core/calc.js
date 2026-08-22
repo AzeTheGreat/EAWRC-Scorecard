@@ -1,4 +1,14 @@
 import { avg, parseTime } from '../lib/util.js';
+import { getClassIds, getStageIds, getLocationIds } from './luts.js';
+
+function countPossibleCombos(filters = {}) {
+  const locationIds = filters.location != null ? [filters.location] : getLocationIds(filters.surface);
+  const stageIds = filters.stage != null ? [filters.stage] : locationIds.flatMap(getStageIds);
+  const classIds = filters.class != null ? [filters.class] : getClassIds(filters.drivetrain);
+
+  // * 2 for wet/dry
+  return stageIds.length * classIds.length * 2;
+}
 
 function computePoints(entries) {
   const scores = entries.map(e => 1 / (e.rank / e.totalEntries));
@@ -35,4 +45,9 @@ function getStats(entries) {
   return s;
 }
 
-export { getStats };
+function getCompletion(entryCount, filters = {}) {
+  const totalPossible = countPossibleCombos(filters);
+  return totalPossible ? entryCount / totalPossible : null;
+}
+
+export { getStats, getCompletion };

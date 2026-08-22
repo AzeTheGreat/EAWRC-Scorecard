@@ -315,7 +315,7 @@ export const getDrivetrainIds = () =>
 
 export const getClassIds = (drivetrainID) =>
   Object.keys(Classes)
-    .filter(id => Classes[id].drivetrainID === drivetrainID)
+    .filter(id => !drivetrainID || Classes[id].drivetrainID === drivetrainID)
     .sort((a, b) => Classes[a].displayOrder - Classes[b].displayOrder)
     .map(Number);
 
@@ -326,7 +326,7 @@ export const getSurfaceIds = () =>
 
 export const getLocationIds = (surfaceID) =>
   Object.keys(Locations)
-    .filter(id => Locations[id].surfaceID === surfaceID)
+    .filter(id => !surfaceID || Locations[id].surfaceID === surfaceID)
     .sort((a, b) => Locations[a].displayOrder - Locations[b].displayOrder)
     .map(Number);
 
@@ -334,7 +334,7 @@ export const getLocationName = (locationId) => Locations[locationId]?.name;
 
 export const getStageIds = (locationId) =>
   Object.keys(Stages)
-    .filter(id => Stages[id].locationID === locationId)
+    .filter(id => !locationId || Stages[id].locationID === locationId)
     .map(Number);
 
 export const getStageName = (stageId) => Stages[stageId]?.name;
