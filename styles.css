@@ -350,6 +350,21 @@ tr td {
 .entries-table td:first-child,
 .entries-table th:first-child {
   text-align: left;
+  max-width: 20rem;
+  white-space: nowrap;
+  overflow: hidden;
+  padding: 0 8px;
+}
+
+@media (max-width: 40em) {
+  .entries-table td:first-child,
+  .entries-table th:first-child {
+    max-width: 10rem;
+  }
+
+  .entries-table td:first-child .muted {
+    display: block;
+  }
 }
 
 .entries-table td+td,

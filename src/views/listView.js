@@ -22,9 +22,9 @@ function rebuildHeader() {
   var tr = document.createElement("tr");
   var cols = [
     { label: "Stage", col: null },
-    { label: "Placement", col: "placement" },
-    { label: "Percentile", col: "percentile" },
-    { label: "Delta", col: "delta" },
+    { label: "Pos", col: "placement" },
+    { label: "Rank", col: "percentile" },
+    { label: "\u0394WR", col: "delta" },
   ];
   cols.forEach(function (c) {
     var label = c.label;
@@ -59,8 +59,8 @@ function renderListView() {
     var weather = e.surfaceCondition == 1 ? "Wet" : "Dry";
     var stageTd = getElem("td");
     stageTd.innerHTML =
-      "<span class=\"stage-main\">" + stageName + "</span><br>" +
-      "<span class=\"muted\">" + locationName + " \u2014 " + weather + " \u2014 " + className + "</span>";
+      "<span class=\"stage-main\">" + stageName + "</span> " +
+      "<span class=\"muted\">" + locationName + " \u00B7 " + weather + " \u00B7 " + className + "</span>";
     tr.appendChild(stageTd);
 
     tr.appendChild(getElem("td", null, e.rank));
