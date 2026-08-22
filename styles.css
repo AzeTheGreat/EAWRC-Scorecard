@@ -243,9 +243,14 @@ tr td {
   scrollbar-color: var(--header-bg) transparent;
 }
 
+.data th,
 .data td,
+.xhead th,
 .xhead td {
+  /* Prevents cells collapsing too far */
   min-width: 3.5rem;
+  /* Ensures cells flex evenly */
+  width: 0;
 }
 
 .xhead td {
