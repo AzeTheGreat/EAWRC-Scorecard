@@ -1,6 +1,6 @@
 import { getStageName, getLocationName, getClassName } from '../core/luts.js';
 import { getStats } from '../core/calc.js';
-import { scorecardStatDefs } from '../core/statDefs.js';
+import { listStatDefs } from '../core/statDefs.js';
 import { getCurrentEntries } from '../state/scorecardState.js';
 import { getElem } from '../lib/dom.js';
 
@@ -64,8 +64,8 @@ function renderListView() {
     tr.appendChild(stageTd);
 
     tr.appendChild(getElem("td", null, e.rank));
-    tr.appendChild(getElem("td", null, s.percentile != null ? scorecardStatDefs.percentile(s) : ""));
-    tr.appendChild(getElem("td", null, scorecardStatDefs.delta(s)));
+    tr.appendChild(getElem("td", null, s.percentile != null ? listStatDefs.percentile(s) : ""));
+    tr.appendChild(getElem("td", null, listStatDefs.delta(s)));
 
     tbody.appendChild(tr);
   });

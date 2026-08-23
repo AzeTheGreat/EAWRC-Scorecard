@@ -1,6 +1,6 @@
 import { getStats } from '../core/calc.js';
 import { setSelectedStat, getCurrentStats } from '../state/scorecardState.js';
-import { profileStatDefs, scorecardStatDefs } from '../core/statDefs.js';
+import { profileStatDefs, pillStatDefs } from '../core/statDefs.js';
 import { setSort } from './listView.js';
 import { getApiData } from '../state/apiData.js';
 
@@ -17,7 +17,7 @@ function updateStatPills() {
 
   // Aggregates
   var stats = getCurrentStats();
-  Object.entries(scorecardStatDefs).forEach(function([stat, fn]) {
+  Object.entries(pillStatDefs).forEach(function([stat, fn]) {
     var pill = document.querySelector('[data-stat="' + stat + '"] .pill-value');
     if (pill) pill.textContent = fn(stats);
     var medal = document.querySelector('[data-stat="medals"] [data-stat="' + stat + '"] .medal-count');
@@ -33,7 +33,7 @@ function updateStatPills() {
 }
 
 function registerStatPillClicks() {
-  Object.keys(scorecardStatDefs).forEach(function(stat) {
+  Object.keys(pillStatDefs).forEach(function(stat) {
     var el = document.querySelector('[data-stat="' + stat + '"]');
     if (el) {
       el.classList.add("clickable");
