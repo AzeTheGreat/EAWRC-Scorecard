@@ -1,6 +1,6 @@
 import { getStats } from '../core/calc.js';
 import { setSelectedStat, getCurrentStats } from '../state/scorecardState.js';
-import { profileStatDefs, pillStatDefs } from '../core/statDefs.js';
+import { profileStatDefs, pillStatDefs, applyStatColor } from '../core/statDefs.js';
 import { setSort } from './listView.js';
 import { getApiData } from '../state/apiData.js';
 
@@ -19,7 +19,10 @@ function updateStatPills() {
   var stats = getCurrentStats();
   Object.entries(pillStatDefs).forEach(function([stat, fn]) {
     var pill = document.querySelector('[data-stat="' + stat + '"] .pill-value');
-    if (pill) pill.textContent = fn(stats);
+    if (pill) {
+      pill.textContent = fn(stats);
+      applyStatColor(pill, stat, stats[stat]);
+    }
     var medal = document.querySelector('[data-stat="medals"] [data-stat="' + stat + '"] .medal-count');
     if (medal) medal.textContent = fn(stats);
   });

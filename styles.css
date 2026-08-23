@@ -173,6 +173,19 @@ tr td {
   min-width: 20px;
 }
 
+/* STAT COLORING */
+
+.stat-colored {
+  color: color-mix(in oklch shorter hue,
+    var(--stat-best, #3fb950) calc(var(--stat-t, 0) * 100%),
+    var(--stat-worst, #f85149));
+}
+
+.stat-medal.platinum { color: #E5E4E2; }
+.stat-medal.gold     { color: #FFD700; }
+.stat-medal.silver   { color: #C0C0C0; }
+.stat-medal.bronze   { color: #CD7F32; }
+
 /* MEDALS */
 
 .medal-icon {

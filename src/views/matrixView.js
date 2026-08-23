@@ -1,7 +1,7 @@
 import { getDrivetrainIds, getClassIds, getClassName, getSurfaceIds, getLocationIds, getStageIds, getLocationName, getStageName } from '../core/luts.js';
 import { getElem, getPanel, getAxisToggleButton, getCellLayout } from '../lib/dom.js';
 import { getState, setState, getSelectedStat, getCurrentStats } from '../state/scorecardState.js';
-import { matrixStatDefs } from '../core/statDefs.js';
+import { matrixStatDefs, applyStatColor } from '../core/statDefs.js';
 
 // Table Config
 const CONFIG = {
@@ -94,10 +94,12 @@ function buildPanel(xEntry, yEntry) {
     if (ye) filters[ye.lvl.levelID] = ye.id;
 
     const stats = getCurrentStats(filters);
-    const value = stats.percentile != null ? matrixStatDefs[getSelectedStat()](stats) : "";
+    const selectedStat = getSelectedStat();
+    const value = stats.percentile != null ? matrixStatDefs[selectedStat](stats) : "";
 
     const layout = getElem("div", "val-layout has-completion");
     layout.style.setProperty("--completion", Math.min(stats.completion ?? 0, 1));
+    applyStatColor(layout, selectedStat, stats[selectedStat]);
     layout.appendChild(getElem("span", "cell-label", value));
     return layout;
   }

@@ -1,6 +1,6 @@
 import { getStageName, getLocationName, getClassName } from '../core/luts.js';
 import { getStats } from '../core/calc.js';
-import { listStatDefs } from '../core/statDefs.js';
+import { listStatDefs, applyStatColor } from '../core/statDefs.js';
 import { getCurrentEntries } from '../state/scorecardState.js';
 import { getElem } from '../lib/dom.js';
 
@@ -63,9 +63,17 @@ function renderListView() {
       "<span class=\"muted\">" + locationName + " \u00B7 " + weather + " \u00B7 " + className + "</span>";
     tr.appendChild(stageTd);
 
-    tr.appendChild(getElem("td", null, e.rank));
-    tr.appendChild(getElem("td", null, s.percentile != null ? listStatDefs.percentile(s) : ""));
-    tr.appendChild(getElem("td", null, listStatDefs.delta(s)));
+    var posTd = getElem("td", null, e.rank);
+    applyStatColor(posTd, "placement", e.rank);
+    tr.appendChild(posTd);
+
+    var rankTd = getElem("td", null, s.percentile != null ? listStatDefs.percentile(s) : "");
+    applyStatColor(rankTd, "percentile", s.percentile);
+    tr.appendChild(rankTd);
+
+    var deltaTd = getElem("td", null, listStatDefs.delta(s));
+    applyStatColor(deltaTd, "delta", s.delta);
+    tr.appendChild(deltaTd);
 
     tbody.appendChild(tr);
   });
