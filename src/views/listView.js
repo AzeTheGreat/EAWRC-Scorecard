@@ -27,9 +27,9 @@ function rebuildHeader() {
     { label: "\u0394WR", col: "delta" },
   ];
   cols.forEach(function (c) {
-    var label = c.label;
-    if (c.col === sortState.column) label += " " + (sortState.isAscending ? "\u25B4" : "\u25BE");
-    var th = getElem("th", null, label);
+    var th = getElem("th", null, c.label);
+    if (c.col === sortState.column)
+      th.appendChild(getElem("span", "sort-indicator", " " + (sortState.isAscending ? "\u25B4" : "\u25BE")));
     if (c.col) th.addEventListener("click", toggleSort.bind(null, c.col));
     tr.appendChild(th);
   });

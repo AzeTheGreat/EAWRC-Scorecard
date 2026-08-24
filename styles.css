@@ -7,7 +7,6 @@
   --text: #c0c8d0;
   --text-header: #ffffff;
   --muted: #5a6a7a;
-  --hover: #19233a;
   --completion-fill: #19233a;
 }
 
@@ -66,10 +65,14 @@ html, body {
 }
 
 .clickable:hover {
-  background: var(--hover);
+  filter: brightness(1.2);
 }
 
 /* Tables */
+
+.sort-indicator {
+  color: var(--accent);
+}
 
 table {
   border-collapse: collapse;
@@ -88,6 +91,7 @@ th {
 td {
   height: 1.75rem;
   text-align: center;
+  background: var(--content-bg)
 }
 
 td + td,
@@ -143,7 +147,7 @@ tr td {
   display: flex;
   align-items: stretch;
   background: transparent;
-  border-radius: 20px;
+  border-radius: 8px;
   outline: 1px solid var(--header-bg);
   overflow: hidden;
   flex-shrink: 0;
@@ -255,6 +259,10 @@ tr td {
   gap: 6px;
 }
 
+.totals-bar {
+  padding: 8px;
+}
+
 .table-wrapper {
   display: grid;
   gap: 6px;
@@ -282,7 +290,7 @@ tr td {
 }
 
 .data th {
-  background: none;
+  background: var(--content-bg);
 }
 
 .yhead td,
@@ -342,7 +350,7 @@ tr td {
   min-width: 1.5rem;
   padding: 2px 6px;
   line-height: 1;
-  color: var(--text-header);
+  color: var(--muted);
   cursor: pointer;
   user-select: none;
 }
@@ -366,7 +374,11 @@ tr td {
 }
 
 .clickable:hover .drill-arrow {
-  color: var(--text-header);
+  color: var(--accent);
+}
+
+.corner:has(.axis-toggle:hover) .drill-arrow {
+  color: var(--muted);
 }
 
 /* ENTRIES */
