@@ -28,9 +28,12 @@ function rebuildHeader() {
   ];
   cols.forEach(function (c) {
     var th = getElem("th", null, c.label);
-    if (c.col === sortState.column)
-      th.appendChild(getElem("span", "sort-indicator", " " + (sortState.isAscending ? "\u25B4" : "\u25BE")));
-    if (c.col) th.addEventListener("click", toggleSort.bind(null, c.col));
+    if (c.col) {
+      var active = c.col === sortState.column;
+      th.prepend(getElem("span", "sort-indicator" + (active ? "" : " sort-indicator--hidden"), active && !sortState.isAscending ? "\u25BE" : "\u25B4"));
+      th.classList.add("clickable");
+      th.addEventListener("click", toggleSort.bind(null, c.col));
+    }
     tr.appendChild(th);
   });
   thead.appendChild(tr);
