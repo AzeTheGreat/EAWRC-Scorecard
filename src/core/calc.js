@@ -1,13 +1,15 @@
 import { avg, parseTime } from '../lib/util.js';
-import { getClassIds, getStageIds, getLocationIds } from './luts.js';
+import { getClassIds, getStageIds, getLocationIds, getWeatherCount } from './luts.js';
 
 function countPossibleCombos(filters = {}) {
   const locationIds = filters.location != null ? [filters.location] : getLocationIds(filters.surface);
-  const stageIds = filters.stage != null ? [filters.stage] : locationIds.flatMap(getStageIds);
   const classIds = filters.class != null ? [filters.class] : getClassIds(filters.drivetrain);
 
-  // * 2 for wet/dry
-  return stageIds.length * classIds.length * 2;
+  return locationIds.reduce((total, locationId) => {
+    const stageIds = getStageIds(locationId);
+    const stageCount = filters.stage != null ? (stageIds.includes(Number(filters.stage)) ? 1 : 0) : stageIds.length;
+    return total + stageCount * classIds.length * getWeatherCount(locationId);
+  }, 0);
 }
 
 function computePoints(entries) {

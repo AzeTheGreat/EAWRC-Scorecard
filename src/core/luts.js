@@ -33,26 +33,26 @@ const Surfaces = {
 };
 
 const Locations = {
-  5: { name: "Mediterraneo", surfaceID: "Asphalt", displayOrder: 4 },
-  6: { name: "Portugal", surfaceID: "Loose", displayOrder: 13 },
-  7: { name: "Italia", surfaceID: "Loose", displayOrder: 7 },
-  8: { name: "Estonia", surfaceID: "Loose", displayOrder: 6 },
-  9: { name: "Scandia", surfaceID: "Loose", displayOrder: 8 },
-  12: { name: "Mexico", surfaceID: "Loose", displayOrder: 4 },
-  13: { name: "Chile", surfaceID: "Loose", displayOrder: 1 },
-  14: { name: "Pacifico", surfaceID: "Loose", displayOrder: 0 },
-  15: { name: "Finland", surfaceID: "Loose", displayOrder: 11 },
-  16: { name: "Croatia", surfaceID: "Asphalt", displayOrder: 1 },
-  17: { name: "Monte-Carlo", surfaceID: "Asphalt", displayOrder: 5 },
-  18: { name: "Sweden", surfaceID: "Loose", displayOrder: 9 },
-  24: { name: "Greece", surfaceID: "Loose", displayOrder: 2 },
-  25: { name: "Japan", surfaceID: "Asphalt", displayOrder: 2 },
-  26: { name: "Kenya", surfaceID: "Loose", displayOrder: 10 },
-  27: { name: "Oceana", surfaceID: "Loose", displayOrder: 3 },
-  28: { name: "Iberia", surfaceID: "Asphalt", displayOrder: 3 },
-  29: { name: "Central Europe", surfaceID: "Asphalt", displayOrder: 0 },
-  30: { name: "Latvia", surfaceID: "Loose", displayOrder: 12 },
-  31: { name: "Poland", surfaceID: "Loose", displayOrder: 5 },
+  5: { name: "Mediterraneo", surfaceID: "Asphalt", displayOrder: 4, weatherCount: 2 },
+  6: { name: "Portugal", surfaceID: "Loose", displayOrder: 13, weatherCount: 2 },
+  7: { name: "Italia", surfaceID: "Loose", displayOrder: 7, weatherCount: 2 },
+  8: { name: "Estonia", surfaceID: "Loose", displayOrder: 6, weatherCount: 2 },
+  9: { name: "Scandia", surfaceID: "Loose", displayOrder: 8, weatherCount: 1 },
+  12: { name: "Mexico", surfaceID: "Loose", displayOrder: 4, weatherCount: 2 },
+  13: { name: "Chile", surfaceID: "Loose", displayOrder: 1, weatherCount: 2 },
+  14: { name: "Pacifico", surfaceID: "Loose", displayOrder: 0, weatherCount: 2 },
+  15: { name: "Finland", surfaceID: "Loose", displayOrder: 11, weatherCount: 2 },
+  16: { name: "Croatia", surfaceID: "Asphalt", displayOrder: 1, weatherCount: 2 },
+  17: { name: "Monte-Carlo", surfaceID: "Asphalt", displayOrder: 5, weatherCount: 2 },
+  18: { name: "Sweden", surfaceID: "Loose", displayOrder: 9, weatherCount: 1 },
+  24: { name: "Greece", surfaceID: "Loose", displayOrder: 2, weatherCount: 2 },
+  25: { name: "Japan", surfaceID: "Asphalt", displayOrder: 2, weatherCount: 2 },
+  26: { name: "Kenya", surfaceID: "Loose", displayOrder: 10, weatherCount: 2 },
+  27: { name: "Oceana", surfaceID: "Loose", displayOrder: 3, weatherCount: 2 },
+  28: { name: "Iberia", surfaceID: "Asphalt", displayOrder: 3, weatherCount: 2 },
+  29: { name: "Central Europe", surfaceID: "Asphalt", displayOrder: 0, weatherCount: 2 },
+  30: { name: "Latvia", surfaceID: "Loose", displayOrder: 12, weatherCount: 2 },
+  31: { name: "Poland", surfaceID: "Loose", displayOrder: 5, weatherCount: 2 },
 };
 
 const Stages = {
@@ -331,6 +331,8 @@ export const getLocationIds = (surfaceID) =>
     .map(Number);
 
 export const getLocationName = (locationId) => Locations[locationId]?.name;
+
+export const getWeatherCount = (locationId) => Locations[locationId]?.weatherCount;
 
 export const getStageIds = (locationId) =>
   Object.keys(Stages)
