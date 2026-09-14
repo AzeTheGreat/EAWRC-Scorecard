@@ -11,11 +11,11 @@
     <div class="card-header flexwrap">
       <input type="text" id="profile-name" class="profile-input" placeholder="Enter name...">
       <div class="header-stats">
-        <div class="stat-pill" data-stat="sp">
+        <div class="stat-pill" data-stat="sp" data-tip="Skill Points - A weighted sum of the 100 highest scores.&#10;Score = Inverse Rank">
           <span class="pill-label">SP</span>
           <span class="pill-value"></span>
         </div>
-        <div class="stat-pill" data-stat="tp">
+        <div class="stat-pill" data-stat="tp" data-tip="Total Points - The sum of all scores.&#10;Score = Inverse Rank">
           <span class="pill-label">TP</span>
           <span class="pill-value"></span>
         </div>
@@ -25,19 +25,19 @@
     <div class="card-body">
       <div class="matrix">
         <div class="panel flexwrap totals-bar">
-            <div class="stat-pill" data-stat="percentile">
-              <span class="pill-label">Percentile</span>
+            <div class="stat-pill" data-stat="percentile" data-tip="Reverse Percentile">
+              <span class="pill-label">Rank</span>
               <span class="pill-value"></span>
             </div>
-            <div class="stat-pill" data-stat="delta">
-              <span class="pill-label">Delta</span>
+            <div class="stat-pill" data-stat="delta" data-tip="Delta from the WR">
+              <span class="pill-label">ΔWR</span>
               <span class="pill-value"></span>
             </div>
-            <div class="stat-pill" data-stat="placement">
-              <span class="pill-label">Placement</span>
+            <div class="stat-pill" data-stat="placement" data-tip="Leaderboard Position">
+              <span class="pill-label">Pos</span>
               <span class="pill-value"></span>
             </div>
-            <div class="stat-pill" data-stat="medals">
+            <div class="stat-pill" data-stat="medals" data-tip="Total WRs | #2s | #3s | Top 10s">
               <span class="pill-label">Medals</span>
               <span class="pill-value">
                 <span class="medal-icon" data-stat="medal1">

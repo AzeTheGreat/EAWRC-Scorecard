@@ -5,6 +5,7 @@ import { setSort } from './listView.js';
 import { getApiData } from '../state/apiData.js';
 
 registerStatPillClicks();
+registerStatTips();
 document.querySelector('[data-stat="percentile"]').classList.add("active");
 
 function updateStatPills() {
@@ -50,6 +51,55 @@ function selectStat(el, stat) {
   document.querySelectorAll("[data-stat].active").forEach(function(e) { e.classList.remove("active"); });
   el.classList.add("active");
   setSort(stat, true);
+}
+
+function registerStatTips() {
+  var tip = document.createElement("div");
+  tip.className = "stat-tip";
+  tip.setAttribute("role", "tooltip");
+  document.body.appendChild(tip);
+
+  function positionTip(anchor) {
+    var r = anchor.getBoundingClientRect();
+    tip.style.visibility = "hidden";
+    tip.classList.add("visible");
+    var tw = tip.offsetWidth;
+    var th = tip.offsetHeight;
+    tip.classList.remove("visible");
+    tip.style.visibility = "";
+    var x = Math.min(Math.max(r.left + r.width / 2 - tw / 2, 8), window.innerWidth - tw - 8);
+    var y = r.top - th - 8;
+    if (y < 8) y = r.bottom + 8;
+    tip.style.left = x + "px";
+    tip.style.top = y + "px";
+  }
+
+  function showTip(anchor) {
+    var text = anchor.getAttribute("data-tip");
+    if (!text) return;
+    tip.textContent = text;
+    positionTip(anchor);
+    tip.classList.add("visible");
+  }
+
+  function hideTip() {
+    clearTimeout(showTimer);
+    tip.classList.remove("visible");
+  }
+
+  var showTimer = null;
+  var SHOW_DELAY = 400;
+
+  document.querySelectorAll("[data-tip]").forEach(function(el) {
+    el.addEventListener("mouseenter", () => {
+      clearTimeout(showTimer);
+      showTimer = setTimeout(() => showTip(el), SHOW_DELAY);
+    });
+    el.addEventListener("mouseleave", hideTip);
+    el.addEventListener("focus", () => showTip(el));
+    el.addEventListener("blur", hideTip);
+  });
+  window.addEventListener("scroll", hideTip, true);
 }
 
 export { updateStatPills };

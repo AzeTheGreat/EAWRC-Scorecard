@@ -196,6 +196,28 @@ tr td {
 .stat-medal.silver   { color: #C0C0C0; }
 .stat-medal.bronze   { color: #CD7F32; }
 
+/* STAT TOOLTIP */
+
+.stat-tip {
+  position: fixed;
+  z-index: 100;
+  padding: 6px 10px;
+  background: var(--content-bg);
+  color: var(--text);
+  border: 1px solid var(--header-bg);
+  border-radius: 6px;
+  font-size: 0.8rem;
+  white-space: pre-line;
+  text-align: center;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.12s ease-in-out;
+}
+
+.stat-tip.visible {
+  opacity: 1;
+}
+
 /* MEDALS */
 
 .medal-icon {
