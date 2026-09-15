@@ -20,9 +20,9 @@ export const matrixStatDefs = {
   delta:      s => formatClock(s.delta, false, 1),
   placement:  s => s.placement == null ? "\u2014" : String(Math.round(s.placement)),
   medal1:     s => s.medal1 || "",
-  medal2:     s => s.medal2 || "",
-  medal3:     s => s.medal3 || "",
-  medal10:    s => s.medal10 || "",
+  medal2:     s => (s.medal1 + s.medal2) || "",
+  medal3:     s => (s.medal1 + s.medal2 + s.medal3) || "",
+  medal10:    s => (s.medal1 + s.medal2 + s.medal3 + s.medal10) || "",
 };
 
 export const listStatDefs = {
@@ -47,23 +47,31 @@ export function statColorT(stat, value) {
   return Math.min(Math.max(t, 0), 1);
 }
 
-// Medal tier for a (possibly averaged) placement
+const MEDAL_STATS = ["medal1", "medal2", "medal3", "medal10"];
+
+export function worstMedalForStat(stats, stat) {
+  if (!stats) return null;
+  return MEDAL_STATS.slice(0, MEDAL_STATS.indexOf(stat) + 1).findLast(m => stats[m] > 0) ?? null;
+}
+
 export function placementMedal(value) {
   if (value == null || isNaN(value)) return null;
   const rank = Math.round(value);
-  if (rank === 1) return "platinum";
-  if (rank === 2) return "gold";
-  if (rank === 3) return "silver";
-  if (rank >= 4 && rank <= 10) return "bronze";
+  if (rank === 1) return "medal1";
+  if (rank === 2) return "medal2";
+  if (rank === 3) return "medal3";
+  if (rank >= 4 && rank <= 10) return "medal10";
   return null;
 }
 
 // Clears any previous coloring, then applies gradient or medal class as appropriate
-export function applyStatColor(el, stat, value) {
-  el.classList.remove("stat-colored", "stat-medal", "platinum", "gold", "silver", "bronze");
+export function applyStatColor(el, stat, value, fullStats) {
+  el.classList.remove("stat-colored", "stat-medal", ...MEDAL_STATS);
 
-  if (stat === "placement") {
-    const medal = placementMedal(value);
+  if (stat === "placement" || stat.startsWith("medal")) {
+    const medal = stat === "placement"
+      ? placementMedal(value)
+      : worstMedalForStat(fullStats, stat);
     if (medal) el.classList.add("stat-medal", medal);
     return;
   }

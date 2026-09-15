@@ -50,7 +50,13 @@ function selectStat(el, stat) {
   setSelectedStat(stat);
   document.querySelectorAll("[data-stat].active").forEach(function(e) { e.classList.remove("active"); });
   el.classList.add("active");
-  setSort(stat, true);
+  if (stat.indexOf("medal") === 0) {
+    var medalsPill = document.querySelector('[data-stat="medals"]');
+    if (medalsPill) medalsPill.classList.add("active");
+    setSort("placement", true);
+  } else {
+    setSort(stat, true);
+  }
 }
 
 function registerStatTips() {

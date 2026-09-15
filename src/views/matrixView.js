@@ -99,7 +99,7 @@ function buildPanel(xEntry, yEntry) {
 
     const layout = getElem("div", "val-layout has-completion");
     layout.style.setProperty("--completion", Math.min(stats.completion ?? 0, 1));
-    applyStatColor(layout, selectedStat, stats[selectedStat]);
+    applyStatColor(layout, selectedStat, stats[selectedStat], stats);
     layout.appendChild(getElem("span", "cell-label", value));
     return layout;
   }

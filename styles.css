@@ -191,10 +191,10 @@ tr td {
     var(--stat-worst, #f85149));
 }
 
-.stat-medal.platinum { color: #B9F2FF; }
-.stat-medal.gold     { color: #FFD700; }
-.stat-medal.silver   { color: #C0C0C0; }
-.stat-medal.bronze   { color: #CD7F32; }
+.stat-medal.medal1 { color: #B9F2FF; }
+.stat-medal.medal2  { color: #FFD700; }
+.stat-medal.medal3  { color: #C0C0C0; }
+.stat-medal.medal10 { color: #CD7F32; }
 
 /* STAT TOOLTIP */
 
@@ -223,25 +223,35 @@ tr td {
 .medal-icon {
   display: inline-flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   cursor: pointer;
 }
 
-.medal-icon.active .medal-dot {
-  box-shadow: 0 0 0 2px var(--accent);
+.medal-label {
+  color: var(--muted);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.medal-icon.active .medal-label {
+  color: var(--text-header);
 }
 
 .medal-dot {
-  width: 10px;
-  height: 10px;
-  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px 6px;
+  border-radius: 999px;
   flex-shrink: 0;
+  border: 1px solid var(--medal-color);
+  background: color-mix(in srgb, var(--medal-color) 25%, transparent);
 }
 
-.medal-dot.platinum { background: #B9F2FF; }
-.medal-dot.gold     { background: #FFD700; }
-.medal-dot.silver   { background: #C0C0C0; }
-.medal-dot.bronze   { background: #CD7F32; }
+.medal-dot.medal1 { --medal-color: #B9F2FF; }
+.medal-dot.medal2  { --medal-color: #FFD700; }
+.medal-dot.medal3  { --medal-color: #C0C0C0; }
+.medal-dot.medal10 { --medal-color: #CD7F32; }
 
 .medal-count {
   font-weight: 600;
