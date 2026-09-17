@@ -367,6 +367,31 @@ tr td {
   overflow: hidden;
 }
 
+/* Override flexing behavior for Webkit
+Super hacky.  Oh well.
+Webkit refuses to expand tables. */
+@supports (-webkit-touch-callout: none) {
+  .table-wrapper .corner table,
+  .table-wrapper .corner thead,
+  .table-wrapper .corner tr,
+  .table-wrapper .yhead table:not(:has(tbody)),
+  .table-wrapper .yhead table:not(:has(tbody)) thead,
+  .table-wrapper .yhead table:not(:has(tbody)) tr {
+    display: flex; flex-direction: column; flex: 1 1 auto;
+  }
+  .table-wrapper .corner th,
+  .table-wrapper .yhead table:not(:has(tbody)) th {
+    display: flex; flex: 1 1 auto; height: auto; min-height: 2rem;
+  }
+  .table-wrapper .yhead table:not(:has(tbody)) th {
+    max-width: none;
+  }
+  .table-wrapper .corner th > .cell-layout,
+  .table-wrapper .yhead table:not(:has(tbody)) th > .cell-layout {
+    flex: 1 1 auto;
+  }
+}
+
 .cell-layout {
   display: grid;
   grid-template-columns: auto 1fr auto;
