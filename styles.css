@@ -464,3 +464,14 @@ tr td {
   top: 0;
   z-index: 2;
 }
+
+/* STAGE LINKS */
+
+.stage-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.stage-link:hover {
+  text-decoration: underline;
+}

@@ -6,6 +6,23 @@ import { getElem } from '../lib/dom.js';
 
 var sortState = { column: "percentile", isAscending: true };
 
+function getBoardUrl(e) {
+  var url = "https://fourleft.io/easportswrc/time-trials/boards?board=" +
+    e.locationId + "-" + e.routeId + "-" + e.surfaceCondition + "-" + e.vehicleClassId;
+  var page = Math.floor((e.rank - 1) / 50);
+  if (page > 0) url += "&page=" + page;
+  return url;
+}
+
+function getRowLink(url, cssClass) {
+  var a = document.createElement("a");
+  a.href = url;
+  a.target = "_blank";
+  a.rel = "noopener noreferrer";
+  if (cssClass) a.className = cssClass;
+  return a;
+}
+
 function setSort(colName, isAscending) {
   sortState.column = colName;
   sortState.isAscending = isAscending;
@@ -55,15 +72,19 @@ function renderListView() {
     var e = es.entry;
     var s = es.stats;
     var tr = document.createElement("tr");
+    var boardUrl = getBoardUrl(e);
 
     var stageName = getStageName(e.routeId) || e.routeId;
     var locationName = getLocationName(e.locationId) || "";
     var className = getClassName(e.vehicleClassId) || "";
     var weather = e.surfaceCondition == 1 ? "Wet" : "Dry";
-    var stageTd = getElem("td");
-    stageTd.innerHTML =
+    var stageHtml =
       "<span class=\"stage-main\">" + stageName + "</span> " +
       "<span class=\"muted\">" + locationName + " \u00B7 " + weather + " \u00B7 " + className + "</span>";
+    var stageTd = getElem("td");
+    var stageLink = getRowLink(boardUrl, "stage-link");
+    stageLink.innerHTML = stageHtml;
+    stageTd.appendChild(stageLink);
     tr.appendChild(stageTd);
 
     var posTd = getElem("td", null, e.rank);
