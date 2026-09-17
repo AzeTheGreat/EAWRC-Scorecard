@@ -302,6 +302,7 @@ tr td {
 .table-wrapper {
   display: grid;
   gap: 6px;
+  background-color: var(--card-bg);
   overflow-x: auto;
   overflow-y: clip;
   padding-bottom: 6px;
@@ -346,9 +347,22 @@ tr td {
 .xhead, .corner { top: 0; }
 .yhead, .corner { left: 0; }
 
-.xhead  { z-index: 4; }
-.yhead  { z-index: 3; }
-.corner { z-index: 5; }
+.xhead  { z-index: 4; box-shadow: 0 6px 0 var(--card-bg); }
+.yhead  { z-index: 3; box-shadow: 6px 0 0 var(--card-bg); }
+.corner { z-index: 5; box-shadow: 6px 0 0 var(--card-bg), 0 6px 0 var(--card-bg), 6px 6px 0 var(--card-bg); }
+
+.table-wrapper .panel {
+  overflow: visible;
+  background: var(--card-bg);
+  border-radius: 0;
+}
+
+.table-wrapper .panel table {
+  border-collapse: separate;
+  border-spacing: 0;
+  border-radius: 8px;
+  overflow: hidden;
+}
 
 .cell-layout {
   display: grid;
