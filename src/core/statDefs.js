@@ -1,8 +1,8 @@
 import { sigFig, formatDelta, formatClock } from '../lib/util.js';
 
 export const profileStatDefs = {
-  sp: s => Math.round(s.sp),
-  tp: s => Math.round(s.tp),
+  sp: s => Math.round(s.sp).toLocaleString("en-US"),
+  tp: s => Math.round(s.tp).toLocaleString("en-US"),
 };
 
 export const pillStatDefs = {
