@@ -305,9 +305,12 @@ tr td {
   background-color: var(--card-bg);
   overflow-x: auto;
   overflow-y: clip;
-  padding-bottom: 6px;
   scrollbar-width: thin;
   scrollbar-color: var(--header-bg) transparent;
+}
+
+.table-wrapper.has-x-scroll {
+  padding-bottom: 6px;
 }
 
 .data th,

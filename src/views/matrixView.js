@@ -35,6 +35,12 @@ const CONFIG = {
 // Main
 const grid = document.querySelector(".table-wrapper");
 
+function updateScrollbarGap() {
+  grid.classList.toggle("has-x-scroll", grid.scrollWidth > grid.clientWidth + 1);
+}
+
+new ResizeObserver(updateScrollbarGap).observe(grid);
+
 const MOBILE_BREAKPOINT_QUERY = "(max-width: 40em)";
 let defaultsCollapsed;
 let collapseOverride;
@@ -83,6 +89,7 @@ function renderMatrixView() {
       grid.appendChild(panel);
     });
   });
+  updateScrollbarGap();
 }
 
 function buildPanel(xEntry, yEntry) {
