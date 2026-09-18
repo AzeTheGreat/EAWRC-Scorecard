@@ -153,11 +153,28 @@ function buildCell(xEntry, yEntry, valueFn, isHeader) {
   return el;
 }
 
+function makeArrowSvg() {
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", "0 0 16 16");
+  svg.setAttribute("aria-hidden", "true");
+  const path = document.createElementNS(NS, "path");
+  path.setAttribute("d", "M2 8h10.5M8.5 4.5 12.5 8l-4 3.5");
+  path.setAttribute("fill", "none");
+  path.setAttribute("stroke", "currentColor");
+  path.setAttribute("stroke-width", "2.2");
+  path.setAttribute("stroke-linecap", "round");
+  path.setAttribute("stroke-linejoin", "round");
+  svg.appendChild(path);
+  return svg;
+}
+
 function buildDrillArrow(variant) {
   const drillRotations = { up: "-90deg", left: "180deg", corner: "-135deg" };
-  const glyph = variant === "corner" ? "\u279C\n\u279C" : "\u279C";
-  
-  const el = getElem("span", "drill-arrow", glyph);
+
+  const el = getElem("span", "drill-arrow");
+  el.appendChild(makeArrowSvg());
+  if (variant === "corner") el.appendChild(makeArrowSvg());
   el.style.transform = "rotate(" + (drillRotations[variant] || "0deg") + ")";
   return el;
 }

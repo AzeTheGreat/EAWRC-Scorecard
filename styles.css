@@ -451,21 +451,19 @@ Webkit refuses to expand tables. */
 
 /* DRILL INDICATORS */
 
-.drill-arrow {
+.drill-arrow svg {
+  display: block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-top: -0.2em;
   color: var(--muted);
-  font-size: 0.85em;
-  pointer-events: none;
-  white-space: pre-line;
-  line-height: .75;
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .clickable:hover .drill-arrow {
+  .xhead .clickable:hover .drill-arrow svg,
+  .yhead .clickable:hover .drill-arrow svg,
+  .to-root .corner-controls-center:hover .drill-arrow svg {
     color: var(--accent);
-  }
-
-  .corner:has(.axis-toggle:hover) .drill-arrow {
-    color: var(--muted);
   }
 }
 
