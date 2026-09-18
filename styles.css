@@ -293,6 +293,19 @@ tr td {
   gap: 12px;
 }
 
+@media (max-width: 40em) {
+  .card-header {
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+  }
+
+  .profile-input {
+    max-width: none;
+    width: 100%;
+  }
+}
+
 /* MATRIX */
 
 .matrix {
