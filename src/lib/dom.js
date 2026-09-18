@@ -31,12 +31,31 @@ export function getPanel(className, groupCell, cells) {
 }
 
 export function getAxisToggleButton(axis, isCollapsed, onToggle) {
-  const btn = getElem("span", `axis-toggle axis-toggle--${axis}`, isCollapsed ? "\u276F" : "\u276E");
+  const btn = getElem("span", `axis-toggle axis-toggle--${axis}`);
+  const icon = makeChevronSvg();
+  // Base chevron points right: y => right/left, x => down/up
+  const rotation = axis === "x"
+    ? (isCollapsed ? "90deg" : "-90deg")
+    : (isCollapsed ? "0deg" : "180deg");
+  icon.style.transform = `rotate(${rotation})`;
+  btn.appendChild(icon);
   btn.addEventListener("click", e => {
     e.stopPropagation();
     onToggle();
   });
   return btn;
+}
+
+function makeChevronSvg() {
+  const NS = "http://www.w3.org/2000/svg";
+  const svg = document.createElementNS(NS, "svg");
+  svg.setAttribute("viewBox", "0 0 16 16");
+  svg.setAttribute("aria-hidden", "true");
+  const path = document.createElementNS(NS, "path");
+  path.setAttribute("d", "M5.02 13.5 L8.63 8 L5.02 2.5 L7.45 2.5 L10.99 8 L7.45 13.5 Z");
+  path.setAttribute("fill", "currentColor");
+  svg.appendChild(path);
+  return svg;
 }
 
 export function getCellLayout(...columns) {
