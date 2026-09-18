@@ -338,7 +338,6 @@ tr td {
 
 .xhead td {
   line-height: 1.1;
-  height: min-content;
   padding: 4px 2px;
 }
 
@@ -408,7 +407,8 @@ Webkit refuses to expand tables. */
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  height: 100%;
+  height: auto;
+  min-height: 100%;
   min-width: 0;
 }
 
