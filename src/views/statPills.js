@@ -95,17 +95,22 @@ function registerStatTips() {
 
   var showTimer = null;
   var SHOW_DELAY = 400;
+  var canHover = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
   document.querySelectorAll("[data-tip]").forEach(function(el) {
     el.addEventListener("mouseenter", () => {
+      if (!canHover()) return;
       clearTimeout(showTimer);
       showTimer = setTimeout(() => showTip(el), SHOW_DELAY);
     });
     el.addEventListener("mouseleave", hideTip);
+    el.addEventListener("click", hideTip);
     el.addEventListener("focus", () => showTip(el));
     el.addEventListener("blur", hideTip);
   });
   window.addEventListener("scroll", hideTip, true);
+  // Failsafe for touch-emulated mouseenter / sticky hover on hybrid devices.
+  window.addEventListener("pointerdown", hideTip, true);
 }
 
 export { updateStatPills };

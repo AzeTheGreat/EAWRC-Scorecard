@@ -64,8 +64,14 @@ html, body {
   cursor: pointer;
 }
 
-.clickable:hover {
+.clickable:active {
   filter: brightness(1.2);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .clickable:hover {
+    filter: brightness(1.2);
+  }
 }
 
 /* Tables */
@@ -433,8 +439,10 @@ Webkit refuses to expand tables. */
   user-select: none;
 }
 
-.axis-toggle:hover {
-  color: var(--accent);
+@media (hover: hover) and (pointer: fine) {
+  .axis-toggle:hover {
+    color: var(--accent);
+  }
 }
 
 .axis-toggle--x {
@@ -451,12 +459,14 @@ Webkit refuses to expand tables. */
   line-height: .75;
 }
 
-.clickable:hover .drill-arrow {
-  color: var(--accent);
-}
+@media (hover: hover) and (pointer: fine) {
+  .clickable:hover .drill-arrow {
+    color: var(--accent);
+  }
 
-.corner:has(.axis-toggle:hover) .drill-arrow {
-  color: var(--muted);
+  .corner:has(.axis-toggle:hover) .drill-arrow {
+    color: var(--muted);
+  }
 }
 
 /* ENTRIES */
@@ -471,9 +481,11 @@ Webkit refuses to expand tables. */
   color: var(--muted);
 }
 
-.entries-table th.clickable:hover {
-  filter: none;
-  color: var(--text);
+@media (hover: hover) and (pointer: fine) {
+  .entries-table th.clickable:hover {
+    filter: none;
+    color: var(--text);
+  }
 }
 
 .entries-table td:first-child,
@@ -514,6 +526,8 @@ Webkit refuses to expand tables. */
   text-decoration: none;
 }
 
-.stage-link:hover {
-  text-decoration: underline;
+@media (hover: hover) and (pointer: fine) {
+  .stage-link:hover {
+    text-decoration: underline;
+  }
 }
