@@ -9,7 +9,10 @@
 <body>
   <div class="container">
     <div class="card-header flexwrap">
-      <input type="text" id="profile-name" class="profile-input" placeholder="Enter name...">
+      <div class="profile-wrap">
+        <input type="text" id="profile-name" class="profile-input" placeholder="Enter name..." autocomplete="off">
+        <ul id="profile-suggest" class="profile-suggest" hidden></ul>
+      </div>
       <div class="header-stats">
         <div class="stat-pill" data-stat="sp" data-tip="Skill Points - A weighted sum of the 100 highest scores.&#10;Score = Inverse Rank">
           <span class="pill-label">SP</span>

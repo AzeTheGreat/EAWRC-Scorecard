@@ -267,8 +267,7 @@ tr td {
 /* PROFILE HEADER */
 
 .profile-input {
-  flex: 1;
-  max-width: 400px;
+  width: 100%;
   min-width: 0;
   padding: 4px 0;
   border: none;
@@ -286,6 +285,40 @@ tr td {
   color: var(--muted);
 }
 
+.profile-wrap {
+  position: relative;
+  flex: 1;
+  max-width: 400px;
+  min-width: 0;
+}
+
+.profile-suggest {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  list-style: none;
+  background: var(--content-bg);
+  border: 1px solid var(--header-bg);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.profile-suggest button {
+  width: 100%;
+  text-align: left;
+  background: transparent;
+  color: var(--text);
+  border: 0;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.profile-suggest button:hover {
+  background: var(--header-bg);
+}
+
 .header-stats {
   align-self: stretch;
   display: flex;
@@ -298,6 +331,11 @@ tr td {
     flex-direction: column;
     align-items: stretch;
     justify-content: flex-start;
+  }
+
+  .profile-wrap {
+    max-width: none;
+    width: 100%;
   }
 
   .profile-input {
