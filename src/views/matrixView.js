@@ -230,7 +230,7 @@ function buildLists(root) {
 function getChildren(entry) {
   if (!entry) return [null];
   const { lvl, id } = entry;
-  if (!lvl.childLevel || isAxisCollapsed(getLevelAxis(lvl))) return [null];
+  if (!lvl.childLevel || isAxisCollapsed(getLevelAxis(lvl))) return [entry];
   return lvl.getChildIds(id).map(cid => ({ lvl: lvl.childLevel, id: cid }));
 }
 
