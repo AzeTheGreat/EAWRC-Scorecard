@@ -41,20 +41,24 @@ function updateScrollbarGap() {
 
 new ResizeObserver(updateScrollbarGap).observe(grid);
 
-const MOBILE_BREAKPOINT_QUERY = "(max-width: 40em)";
-let defaultsCollapsed;
-let collapseOverride;
+const isMobile = () => window.matchMedia("(max-width: 40em)").matches;
 
-resetCollapseDefaults();
+let multiOverride = { x: null, y: null };
+let singleCollapsed = { x: false, y: false };
 
-function resetCollapseDefaults() {
-  defaultsCollapsed = window.matchMedia(MOBILE_BREAKPOINT_QUERY).matches;
-  collapseOverride = { x: null, y: null };
+function resetForRoot() {
+  singleCollapsed = { x: false, y: false };
+}
+
+function isSingleNow(axis) {
+  const state = getState();
+  const axisDef = axis === "x" ? CONFIG.xAxis : CONFIG.yAxis;
+  return state[findDeepestPinnedLevel(axisDef, state).levelID] != null;
 }
 
 function isAxisCollapsed(axis) {
-  const override = collapseOverride[axis];
-  return override != null ? override : defaultsCollapsed;
+  if (isSingleNow(axis)) return singleCollapsed[axis];
+  return multiOverride[axis] ?? isMobile();
 }
 
 function findDeepestPinnedLevel(axisDef, state) {
@@ -70,8 +74,9 @@ function findDeepestPinnedLevel(axisDef, state) {
 // Build UI
 function renderMatrixView() {
   grid.innerHTML = "";
-  const xLists = buildLists(CONFIG.xAxis);
-  const yLists = buildLists(CONFIG.yAxis);
+  const state = getState();
+  const xLists = buildLists(CONFIG.xAxis, "x", state);
+  const yLists = buildLists(CONFIG.yAxis, "y", state);
 
   grid.style.gridTemplateColumns =
     [1, ...xLists.map(x => getChildren(x).length)]
@@ -129,7 +134,11 @@ function buildPanel(xEntry, yEntry) {
 }
 
 function buildCornerControls(isToRoot) {
-  const toggleAxisCollapse = (axis) => { collapseOverride[axis] = !isAxisCollapsed(axis); renderMatrixView(); }
+  const toggleAxisCollapse = (axis) => {
+    const store = isSingleNow(axis) ? singleCollapsed : multiOverride;
+    store[axis] = !isAxisCollapsed(axis);
+    renderMatrixView();
+  }
   
   const buildAxisToggleSlot = (axis, axisDef) => !!findDeepestPinnedLevel(axisDef, getState()).childLevel ? 
     getAxisToggleButton(axis, isAxisCollapsed(axis), () => toggleAxisCollapse(axis)) : 
@@ -191,7 +200,7 @@ function getClickActionAndClass(xEntry, yEntry, state) {
       className: "to-root clickable",
       action: applyAndSet(() => {
         Object.keys(state).forEach(k => (state[k] = null));
-        resetCollapseDefaults();
+        resetForRoot();
       }),
     };
   }
@@ -206,37 +215,36 @@ function getClickActionAndClass(xEntry, yEntry, state) {
       action: applyAndSet(() => {
         state[xEntry.lvl.levelID] = xEntry.id;
         state[yEntry.lvl.levelID] = yEntry.id;
+        singleCollapsed.x = false;
+        singleCollapsed.y = false;
       }),
     };
   }
 
   // Header cell: toggle drill for a single level
-  const { lvl: { levelID }, id } = xEntry || yEntry;
+  const { lvl: { levelID }, id, axis } = xEntry || yEntry;
   const isPinned = state[levelID] === id;
   return {
     className: isPinned ? "drill-up clickable" : "clickable",
-    action: applyAndSet(() => { state[levelID] = isPinned ? null : id; }),
+    action: applyAndSet(() => {
+      state[levelID] = isPinned ? null : id;
+      singleCollapsed[axis] = false;
+    }),
   };
 }
 
-function buildLists(root) {
-  const state = getState();
+function buildLists(root, axis, state) {
   const levelDef = findDeepestPinnedLevel(root, state);
   const pinnedId = state[levelDef.levelID];
   const ids = pinnedId != null ? [pinnedId] : levelDef.getRootIds();
-  return ids.map(id => ({ lvl: levelDef, id }));
+  return ids.map(id => ({ lvl: levelDef, id, axis }));
 }
 
 function getChildren(entry) {
   if (!entry) return [null];
-  const { lvl, id } = entry;
-  if (!lvl.childLevel || isAxisCollapsed(getLevelAxis(lvl))) return [entry];
-  return lvl.getChildIds(id).map(cid => ({ lvl: lvl.childLevel, id: cid }));
-}
-
-function getLevelAxis(lvl) {
-  for (let cur = CONFIG.xAxis; cur; cur = cur.childLevel) if (cur === lvl) return "x";
-  for (let cur = CONFIG.yAxis; cur; cur = cur.childLevel) if (cur === lvl) return "y";
+  const { lvl, id, axis } = entry;
+  if (!lvl.childLevel || isAxisCollapsed(axis)) return [entry];
+  return lvl.getChildIds(id).map(cid => ({ lvl: lvl.childLevel, id: cid, axis }));
 }
 
 export { renderMatrixView };
